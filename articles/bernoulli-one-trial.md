@@ -6,6 +6,8 @@ topics: ["statistics", "python", "r"]
 published: false
 ---
 
+<!-- Zenn PR draft deploy test: 2026-09-29 -->
+
 ベルヌーイ分布は、一般に「1回の試行を表す確率分布」と説明されます。
 
 ここで疑問が生じます。
