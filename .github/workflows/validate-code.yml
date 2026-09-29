@@ -1,5 +1,6 @@
 name: Validate article code
 # Runs Python and R examples used by Zenn articles.
+# Actions enabled verification
 
 on:
   pull_request:
