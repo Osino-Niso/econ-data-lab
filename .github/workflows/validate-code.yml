@@ -1,4 +1,5 @@
 name: Validate article code
+# Runs Python and R examples used by Zenn articles.
 
 on:
   pull_request:
