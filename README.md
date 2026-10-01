@@ -17,6 +17,15 @@ Zenn: **経済データ実験室**
 
 「1回の試行」と「確率分布」がなぜ両立するのかを、確率変数・実現値・分布の違いから整理し、PythonとRで実際に確認しています。
 
+### E[u|X]=0って結局どういう意味？ 条件付き平均ゼロから外生性を考える
+
+- Zenn: https://zenn.dev/econ_data_lab/articles/zero-conditional-mean
+- 原稿: [articles/zero-conditional-mean.md](articles/zero-conditional-mean.md)
+- Python: [code/zero-conditional-mean/python.py](code/zero-conditional-mean/python.py)
+- R: [code/zero-conditional-mean/r.R](code/zero-conditional-mean/r.R)
+
+ゼロ条件付き平均の意味を、$E[u]=0$・無相関・独立との違い、誤差項と残差、欠落変数の例から整理し、PythonとRのシミュレーションで確認しています。
+
 ## 方針
 
 - 初学者が混同しやすい論点を、疑問から順にほどく
@@ -24,6 +33,8 @@ Zenn: **経済データ実験室**
 - 可能な限りPythonとRの両方で同じ概念を確認する
 - 記事中のコードは実行して出力を確認する
 - 公開前に文章・数式・コードの整合性を確認する
+- 参考資料は、同等に信頼できる資料がある場合は日本語資料を優先する
+- 日本語で十分に確認できない論点では、英語資料を補助的に用いる
 - 将来的には日本の公的統計など、実データを使った検証にも広げる
 
 ## 再現性と検証
