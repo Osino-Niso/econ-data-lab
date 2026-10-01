@@ -36,11 +36,21 @@ jobs:
           mkdir -p ci-output
           python code/bernoulli-one-trial/python.py | tee ci-output/python.txt
 
+      - name: Run zero conditional mean example
+        run: |
+          python code/zero-conditional-mean/python.py | tee ci-output/zero-conditional-mean-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
           name: bernoulli-python-output
           path: ci-output/python.txt
+
+      - name: Save zero conditional mean Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-conditional-mean-python-output
+          path: ci-output/zero-conditional-mean-python.txt
 
   r:
     name: R
@@ -57,8 +67,18 @@ jobs:
           mkdir -p ci-output
           Rscript code/bernoulli-one-trial/r.R | tee ci-output/r.txt
 
+      - name: Run zero conditional mean example
+        run: |
+          Rscript code/zero-conditional-mean/r.R | tee ci-output/zero-conditional-mean-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
           name: bernoulli-r-output
           path: ci-output/r.txt
+
+      - name: Save zero conditional mean R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: zero-conditional-mean-r-output
+          path: ci-output/zero-conditional-mean-r.txt
