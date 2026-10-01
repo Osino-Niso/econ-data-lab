@@ -3,7 +3,7 @@ title: "E[u|X]=0って結局どういう意味？ 条件付き平均ゼロから
 emoji: "📉"
 type: "tech"
 topics: ["econometrics", "statistics", "python", "r"]
-published: false
+published: true
 ---
 
 計量経済学で単回帰を学ぶと、かなり早い段階で
