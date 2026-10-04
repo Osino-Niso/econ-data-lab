@@ -3,7 +3,7 @@ title: "標本分布の期待値・分散・標準偏差は何のため？ 標�
 emoji: "📊"
 type: "tech"
 topics: ["statistics", "econometrics", "python", "r"]
-published: false
+published: true
 ---
 
 計量経済学の授業で、標本平均は確率変数なので標本分布を考えられる、と習いました。
