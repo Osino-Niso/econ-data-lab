@@ -469,7 +469,7 @@ for n in sample_sizes:
     )
     sample_means_by_n[n] = samples.mean(axis=1)
 
-fig, ax = plt.subplots(figsize=(8, 5))
+fig, ax = plt.subplots(figsize=(6.4, 3.8))
 
 bins = np.linspace(84, 116, 65)
 
@@ -479,11 +479,11 @@ for n in sample_sizes:
         bins=bins,
         density=True,
         histtype="step",
-        linewidth=1.5,
+        linewidth=1.3,
         label=f"n = {n}",
     )
 
-ax.axvline(mu, linestyle="--", linewidth=1.2, label="population mean")
+ax.axvline(mu, linestyle="--", linewidth=1.0, label="population mean")
 ax.set_xlabel("sample mean")
 ax.set_ylabel("density")
 ax.set_title("Sampling distributions of the sample mean")
@@ -491,14 +491,18 @@ ax.legend()
 
 fig.tight_layout()
 
-output_path = Path("sampling-distribution.png")
-fig.savefig(output_path, dpi=150)
+output_path = Path("images/sampling-distribution-moments.webp")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+fig.savefig(output_path, dpi=100)
 plt.close(fig)
 ```
 
-この図では、中心はどちらも100付近のままですが、$n=100$ の分布のほうが狭くなります。
+![n=25とn=100の標本平均の標本分布](/images/sampling-distribution-moments.webp)
+*同じ母集団から標本を10,000回ずつ生成した結果。中心はどちらも100付近だが、n=100のほうが分布が狭い。*
 
-GitHub Actionsでは、この可視化コードも実行し、生成されたPNGをartifactとして保存するようにしています。
+数値で標準偏差が4から2へ小さくなることを確認するだけでなく、図にすると「中心はほぼ動かず、広がりだけが小さくなる」という違いが見えやすくなります。
+
+GitHub Actionsでもこの可視化コードを実行し、記事で使うWebP画像をartifactとして保存するようにしています。
 
 ## 9. Rでも同じ実験をする
 
@@ -534,6 +538,8 @@ PythonとRでは乱数生成の仕組みが異なるため、実行結果の数�
 - $n=100$ では2付近
 
 になることを確認できます。
+
+Rでも同様のヒストグラムを描けますが、同じ内容の図を2枚並べると重複が大きいため、本文ではPythonで生成した図だけを掲載しています。
 
 ## 10. 信頼区間・仮説検定へどうつながるか
 
@@ -705,6 +711,5 @@ $$
 
 ## 参考資料
 
-- [金沢大学 河西邦人「3. 標本平均・標本分散・大数の法則・中心極限定理」](https://t-kawanishi.w3.kanazawa-u.ac.jp/lectures/lecture_notes/basic_statistics/basic_statistics_2022/Lecture_030.html)
-- [金沢大学 河西邦人「4. 実験データの解析・標準誤差・信頼区間」](https://t-kawanishi.w3.kanazawa-u.ac.jp/lectures/lecture_notes/basic_statistics/basic_statistics_2022/Lecture_040.html)
+- [東北大学 石垣司「統計学入門 ～標本平均～」](https://www2.econ.tohoku.ac.jp/~isgk/lec_material/basic_stat/basic_stat_09.pdf)
 - [龍谷大学 蛭川雅之「経済統計学講義ノート No.6」](https://www.econ.ryukoku.ac.jp/~hirukawa/econstat/ln06.pdf)
