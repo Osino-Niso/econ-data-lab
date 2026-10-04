@@ -40,6 +40,10 @@ jobs:
         run: |
           python code/zero-conditional-mean/python.py | tee ci-output/zero-conditional-mean-python.txt
 
+      - name: Run sampling distribution moments example
+        run: |
+          python code/sampling-distribution-moments/python.py | tee ci-output/sampling-distribution-moments-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -51,6 +55,12 @@ jobs:
         with:
           name: zero-conditional-mean-python-output
           path: ci-output/zero-conditional-mean-python.txt
+
+      - name: Save sampling distribution moments Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: sampling-distribution-moments-python-output
+          path: ci-output/sampling-distribution-moments-python.txt
 
   r:
     name: R
@@ -71,6 +81,10 @@ jobs:
         run: |
           Rscript code/zero-conditional-mean/r.R | tee ci-output/zero-conditional-mean-r.txt
 
+      - name: Run sampling distribution moments example
+        run: |
+          Rscript code/sampling-distribution-moments/r.R | tee ci-output/sampling-distribution-moments-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -82,3 +96,9 @@ jobs:
         with:
           name: zero-conditional-mean-r-output
           path: ci-output/zero-conditional-mean-r.txt
+
+      - name: Save sampling distribution moments R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: sampling-distribution-moments-r-output
+          path: ci-output/sampling-distribution-moments-r.txt
