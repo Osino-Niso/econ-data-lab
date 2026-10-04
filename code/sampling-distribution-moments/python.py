@@ -54,7 +54,7 @@ for n in sample_sizes:
 
 assert results[100]["sd"] < results[25]["sd"]
 
-fig, ax = plt.subplots(figsize=(8, 5))
+fig, ax = plt.subplots(figsize=(6.4, 3.8))
 bins = np.linspace(84, 116, 65)
 
 for n in sample_sizes:
@@ -63,19 +63,20 @@ for n in sample_sizes:
         bins=bins,
         density=True,
         histtype="step",
-        linewidth=1.5,
+        linewidth=1.3,
         label=f"n = {n}",
     )
 
-ax.axvline(mu, linestyle="--", linewidth=1.2, label="population mean")
+ax.axvline(mu, linestyle="--", linewidth=1.0, label="population mean")
 ax.set_xlabel("sample mean")
 ax.set_ylabel("density")
 ax.set_title("Sampling distributions of the sample mean")
 ax.legend()
 fig.tight_layout()
 
-plot_path = Path(__file__).with_name("sampling-distribution.png")
-fig.savefig(plot_path, dpi=150)
+plot_path = Path("images/sampling-distribution-moments.webp")
+plot_path.parent.mkdir(parents=True, exist_ok=True)
+fig.savefig(plot_path, dpi=100)
 plt.close(fig)
 
 assert plot_path.exists()
