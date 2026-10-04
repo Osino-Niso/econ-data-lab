@@ -5,6 +5,7 @@ on:
     paths:
       - "code/**"
       - "articles/**"
+      - "images/**"
       - ".github/workflows/validate-code.yml"
   push:
     branches:
@@ -12,6 +13,7 @@ on:
     paths:
       - "code/**"
       - "articles/**"
+      - "images/**"
       - ".github/workflows/validate-code.yml"
   workflow_dispatch:
 
@@ -66,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sampling-distribution-moments-python-plot
-          path: code/sampling-distribution-moments/sampling-distribution.png
+          path: images/sampling-distribution-moments.webp
 
   r:
     name: R
