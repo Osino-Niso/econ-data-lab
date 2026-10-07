@@ -46,6 +46,10 @@ jobs:
         run: |
           python code/sampling-distribution-moments/python.py | tee ci-output/sampling-distribution-moments-python.txt
 
+      - name: Run QoQ vs YoY IIP example
+        run: |
+          python code/qoq-vs-yoy-iip/python.py | tee ci-output/qoq-vs-yoy-iip-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -64,11 +68,23 @@ jobs:
           name: sampling-distribution-moments-python-output
           path: ci-output/sampling-distribution-moments-python.txt
 
+      - name: Save QoQ vs YoY Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: qoq-vs-yoy-iip-python-output
+          path: ci-output/qoq-vs-yoy-iip-python.txt
+
       - name: Save sampling distribution plot
         uses: actions/upload-artifact@v4
         with:
           name: sampling-distribution-moments-python-plot
           path: images/sampling-distribution-moments.webp
+
+      - name: Save QoQ vs YoY plot
+        uses: actions/upload-artifact@v4
+        with:
+          name: qoq-vs-yoy-iip-python-plot
+          path: images/qoq-vs-yoy-iip.webp
 
   r:
     name: R
@@ -93,6 +109,10 @@ jobs:
         run: |
           Rscript code/sampling-distribution-moments/r.R | tee ci-output/sampling-distribution-moments-r.txt
 
+      - name: Run QoQ vs YoY IIP example
+        run: |
+          Rscript code/qoq-vs-yoy-iip/r.R | tee ci-output/qoq-vs-yoy-iip-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -110,3 +130,9 @@ jobs:
         with:
           name: sampling-distribution-moments-r-output
           path: ci-output/sampling-distribution-moments-r.txt
+
+      - name: Save QoQ vs YoY R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: qoq-vs-yoy-iip-r-output
+          path: ci-output/qoq-vs-yoy-iip-r.txt
