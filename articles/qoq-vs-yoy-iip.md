@@ -3,7 +3,7 @@ title: "前年比と前期比、どちらを見ればいい？ 同じデータ�
 emoji: "📈"
 type: "tech"
 topics: ["economics", "statistics", "python", "r"]
-published: false
+published: true
 ---
 
 経済統計の授業で、前期比と前年同期比を扱いました。
