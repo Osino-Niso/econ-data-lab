@@ -50,6 +50,10 @@ jobs:
         run: |
           python code/qoq-vs-yoy-iip/python.py | tee ci-output/qoq-vs-yoy-iip-python.txt
 
+      - name: Run present value cash flow example
+        run: |
+          python code/present-value-cash-flows/python.py | tee ci-output/present-value-cash-flows-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -73,6 +77,12 @@ jobs:
         with:
           name: qoq-vs-yoy-iip-python-output
           path: ci-output/qoq-vs-yoy-iip-python.txt
+
+      - name: Save present value cash flow Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: present-value-cash-flows-python-output
+          path: ci-output/present-value-cash-flows-python.txt
 
       - name: Save sampling distribution plot
         uses: actions/upload-artifact@v4
@@ -113,6 +123,10 @@ jobs:
         run: |
           Rscript code/qoq-vs-yoy-iip/r.R | tee ci-output/qoq-vs-yoy-iip-r.txt
 
+      - name: Run present value cash flow example
+        run: |
+          Rscript code/present-value-cash-flows/r.R | tee ci-output/present-value-cash-flows-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -136,3 +150,9 @@ jobs:
         with:
           name: qoq-vs-yoy-iip-r-output
           path: ci-output/qoq-vs-yoy-iip-r.txt
+
+      - name: Save present value cash flow R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: present-value-cash-flows-r-output
+          path: ci-output/present-value-cash-flows-r.txt
