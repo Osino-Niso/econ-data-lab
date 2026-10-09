@@ -138,7 +138,7 @@ $$
 
 となります。
 
-![](/images/present-value-cash-flows/timeline.png)
+![](/images/present-value-cash-flows/timeline.webp)
 
 合計すると、
 
@@ -226,7 +226,7 @@ $$
 
 どちらも名目額の合計は120万円です。
 
-![](/images/present-value-cash-flows/projects.png)
+![](/images/present-value-cash-flows/projects.webp)
 
 しかし現在価値は、案件Aが
 
