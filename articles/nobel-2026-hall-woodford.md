@@ -3,7 +3,7 @@ title: "2026年ノーベル経済学賞を数式で追う：HallからWoodford�
 emoji: "🏦"
 type: "tech"
 topics: ["economics", "macroeconomics", "python", "r"]
-published: false
+published: true
 ---
 
 2026年の「ノーベル経済学賞」（正式には *Sveriges Riksbank Prize in Economic Sciences in Memory of Alfred Nobel*）は、Robert E. HallとMichael Woodfordに授与されました。
