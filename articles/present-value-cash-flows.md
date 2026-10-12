@@ -3,7 +3,7 @@ title: "将来の100万円をそのまま足していい？ キャッシュフ�
 emoji: "⏳"
 type: "tech"
 topics: ["finance", "economics", "python", "r"]
-published: false
+published: true
 ---
 
 金融工学の授業では、**キャッシュフロー（cash flow）**という言葉がよく出てきます。
