@@ -54,6 +54,10 @@ jobs:
         run: |
           python code/present-value-cash-flows/python.py | tee ci-output/present-value-cash-flows-python.txt
 
+      - name: Run Nobel 2026 Hall-Woodford example
+        run: |
+          python code/nobel-2026-hall-woodford/python.py | tee ci-output/nobel-2026-hall-woodford-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -83,6 +87,12 @@ jobs:
         with:
           name: present-value-cash-flows-python-output
           path: ci-output/present-value-cash-flows-python.txt
+
+      - name: Save Nobel 2026 Hall-Woodford Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nobel-2026-hall-woodford-python-output
+          path: ci-output/nobel-2026-hall-woodford-python.txt
 
       - name: Save sampling distribution plot
         uses: actions/upload-artifact@v4
@@ -127,6 +137,10 @@ jobs:
         run: |
           Rscript code/present-value-cash-flows/r.R | tee ci-output/present-value-cash-flows-r.txt
 
+      - name: Run Nobel 2026 Hall-Woodford example
+        run: |
+          Rscript code/nobel-2026-hall-woodford/r.R | tee ci-output/nobel-2026-hall-woodford-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -156,3 +170,9 @@ jobs:
         with:
           name: present-value-cash-flows-r-output
           path: ci-output/present-value-cash-flows-r.txt
+
+      - name: Save Nobel 2026 Hall-Woodford R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nobel-2026-hall-woodford-r-output
+          path: ci-output/nobel-2026-hall-woodford-r.txt
