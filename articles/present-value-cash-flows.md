@@ -18,7 +18,7 @@ published: false
 
 たとえば、今日100万円を投資し、1年後と2年後に60万円ずつ受け取る案件を考えます。
 
-![](/images/present-value-cash-flows/basic-cashflow-diagram.webp)
+![](/images/present-value-cash-flows-basic.webp)
 
 この図では、
 
@@ -174,7 +174,7 @@ $$
 
 となります。
 
-![](/images/present-value-cash-flows/timeline.webp)
+![](/images/present-value-cash-flows-timeline.webp)
 
 合計すると、
 
@@ -262,7 +262,7 @@ $$
 
 どちらも名目額の合計は120万円です。
 
-![](/images/present-value-cash-flows/projects.webp)
+![](/images/present-value-cash-flows-projects.webp)
 
 しかし現在価値は、案件Aが
 
