@@ -722,3 +722,4 @@ $$
   https://www.boj.or.jp/research/wps_rev/lab/lab18j02.htm
 - 日本銀行「自然利子率の動向と金融緩和度合いの評価」  
   https://www.boj.or.jp/research/wps_rev/rev_2026/rev26j05.htm
+
