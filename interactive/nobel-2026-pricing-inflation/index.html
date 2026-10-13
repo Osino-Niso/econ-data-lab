@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ニュー・ケインジアン政策ラボ</title>
+  <style>
+    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f7f9; color: #1f2937; }
+    main { max-width: 1040px; margin: 0 auto; padding: 20px; }
+    h1 { margin: 0 0 8px; font-size: 1.55rem; }
+    h2 { font-size: 1.18rem; margin: 0 0 12px; }
+    p { line-height: 1.65; }
+    .lead { margin: 0 0 18px; color: #4b5563; }
+    .panel { background: white; border: 1px solid #dfe3e8; border-radius: 14px; padding: 18px; margin: 16px 0; }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); }
+    label { display: block; font-size: .88rem; font-weight: 650; }
+    .value { float: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+    input[type="range"] { width: 100%; margin-top: 8px; }
+    .cards { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 16px; }
+    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; }
+    .card small { display: block; color: #6b7280; margin-bottom: 4px; }
+    .card strong { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+    .formula { overflow-x: auto; background: #f3f4f6; border-radius: 10px; padding: 10px 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem; }
+    .stance { font-weight: 750; }
+    .note { font-size: .88rem; color: #4b5563; }
+    svg { width: 100%; height: 250px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; margin-top: 14px; }
+    .axis { stroke: #9ca3af; stroke-width: 1; }
+    .curve { fill: none; stroke: #374151; stroke-width: 2.5; }
+    .point { fill: #111827; }
+    .guide { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 4 4; }
+    .svg-label { font-size: 11px; fill: #4b5563; }
+    .warning { background: #fff8e6; border-left: 4px solid #c98a00; padding: 10px 12px; border-radius: 6px; }
+    @media (max-width: 600px) { main { padding: 12px; } .panel { padding: 14px; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>ニュー・ケインジアン政策ラボ</h1>
+  <p class="lead">スライダーを動かして、「名目金利 → 期待実質金利 → GDPギャップ → インフレ」と Taylor principle の符号を確認するための教材です。</p>
+
+  <section class="panel">
+    <h2>A. 金利からGDPギャップ、インフレへ</h2>
+    <p class="formula">rᵉ = i − Eπ　 /　 x = E[x₊₁] − ((rᵉ − rⁿ) / σ)　 /　 π = βEπ + κx</p>
+    <div class="grid" id="transmissionInputs"></div>
+    <div class="cards">
+      <div class="card"><small>期待実質金利 rᵉ</small><strong id="realRate"></strong></div>
+      <div class="card"><small>金利ギャップ rᵉ − rⁿ</small><strong id="rateGap"></strong></div>
+      <div class="card"><small>GDPギャップ x</small><strong id="outputGap"></strong></div>
+      <div class="card"><small>現在のインフレ率 π</small><strong id="inflation"></strong></div>
+      <div class="card"><small>金融環境の方向</small><strong class="stance" id="stance"></strong></div>
+    </div>
+    <svg id="nkpcChart" viewBox="0 0 640 250" role="img" aria-label="GDPギャップとインフレ率の関係"></svg>
+    <p class="note">図の点は現在の設定です。GDPギャップが負でも、期待インフレ率が十分高ければ現在のインフレ率は正のままになり得ます。</p>
+  </section>
+
+  <section class="panel">
+    <h2>B. Taylor principle を動かす</h2>
+    <p class="formula">i = rⁿ + π* + φπ(π − π*) + φx x　 /　 rᵉ = i − Eπ₊₁</p>
+    <div class="grid" id="taylorInputs"></div>
+    <div class="cards">
+      <div class="card"><small>ルールが示す名目金利 i</small><strong id="policyRate"></strong></div>
+      <div class="card"><small>期待実質金利 rᵉ</small><strong id="taylorRealRate"></strong></div>
+      <div class="card"><small>自然利子率との差</small><strong id="taylorGap"></strong></div>
+      <div class="card"><small>Taylor principle</small><strong id="principle"></strong></div>
+    </div>
+    <svg id="taylorChart" viewBox="0 0 640 250" role="img" aria-label="インフレギャップと実質金利ギャップの関係"></svg>
+    <p class="note">右の図では、期待インフレ率の乖離が現在のインフレ率の乖離と同じだけ動くと仮定した場合の実質金利ギャップを描きます。φπ &gt; 1 なら傾きは正になります。</p>
+  </section>
+
+  <p class="warning">この教材は基本的な3式ニュー・ケインジアン・モデルの符号確認用です。実際の金融政策では、期待形成、供給ショック、金融摩擦、政策ラグなどをさらに考える必要があります。</p>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
