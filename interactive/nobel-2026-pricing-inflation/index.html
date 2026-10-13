@@ -3,73 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17191d" />
   <title>ニュー・ケインジアン政策ラボ</title>
   <style>
-    :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    :root {
+      color-scheme: dark;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+      --bg:#0d0f12; --panel:#202226; --panel2:#272a2f; --line:#3b3f46; --text:#f4f4f5; --muted:#a7abb3;
+      --blue:#4c8dff; --green:#4fd08a; --gray:#a8a8aa; --amber:#e5b34f; --red:#ff6b6b;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #f6f7f9; color: #1f2937; }
-    main { max-width: 1040px; margin: 0 auto; padding: 20px; }
-    h1 { margin: 0 0 8px; font-size: 1.55rem; }
-    h2 { font-size: 1.18rem; margin: 0 0 12px; }
-    p { line-height: 1.65; }
-    .lead { margin: 0 0 18px; color: #4b5563; }
-    .panel { background: white; border: 1px solid #dfe3e8; border-radius: 14px; padding: 18px; margin: 16px 0; }
-    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(205px, 1fr)); }
-    label { display: block; font-size: .88rem; font-weight: 650; }
-    .value { float: right; font-variant-numeric: tabular-nums; font-weight: 500; }
-    input[type="range"] { width: 100%; margin-top: 8px; }
-    .cards { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 16px; }
-    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; background: #fafafa; }
-    .card small { display: block; color: #6b7280; margin-bottom: 4px; }
-    .card strong { font-size: 1.15rem; font-variant-numeric: tabular-nums; }
-    .formula { overflow-x: auto; background: #f3f4f6; border-radius: 10px; padding: 10px 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem; }
-    .stance { font-weight: 750; }
-    .note { font-size: .88rem; color: #4b5563; }
-    svg { width: 100%; height: 250px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; margin-top: 14px; }
-    .axis { stroke: #9ca3af; stroke-width: 1; }
-    .curve { fill: none; stroke: #374151; stroke-width: 2.5; }
-    .point { fill: #111827; }
-    .guide { stroke: #d1d5db; stroke-width: 1; stroke-dasharray: 4 4; }
-    .svg-label { font-size: 11px; fill: #4b5563; }
-    .warning { background: #fff8e6; border-left: 4px solid #c98a00; padding: 10px 12px; border-radius: 6px; }
-    @media (max-width: 600px) { main { padding: 12px; } .panel { padding: 14px; } }
+    body { margin:0; background:var(--bg); color:var(--text); }
+    main { max-width:1180px; margin:0 auto; padding:22px 16px 40px; }
+    h1 { font-size:clamp(1.45rem,3vw,2rem); margin:0; letter-spacing:.01em; }
+    h2 { font-size:1.08rem; margin:0; }
+    p { line-height:1.7; }
+    .lead { color:var(--muted); margin:8px 0 20px; }
+    .lab { background:var(--panel); border:1px solid #35383e; border-radius:26px; overflow:hidden; box-shadow:0 16px 50px rgba(0,0,0,.25); margin:20px 0 28px; }
+    .lab-head { padding:20px 22px 12px; display:flex; gap:14px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+    .lab-head p { margin:5px 0 0; color:var(--muted); font-size:.92rem; }
+    .legend { display:flex; gap:18px; flex-wrap:wrap; align-items:center; color:#d4d4d8; font-size:.88rem; }
+    .legend span { display:flex; align-items:center; gap:7px; white-space:nowrap; }
+    .swatch { width:30px; height:4px; border-radius:5px; background:var(--blue); }
+    .swatch.green { background:var(--green); } .swatch.gray { background:var(--gray); }
+    .charts { display:grid; grid-template-columns:1fr 1fr; gap:0; border-top:1px solid #34373d; border-bottom:1px solid #34373d; }
+    .chart-wrap { padding:14px 16px 10px; min-width:0; }
+    .chart-wrap + .chart-wrap { border-left:1px solid #34373d; }
+    .chart-title { color:#c8cad0; font-weight:700; text-align:center; margin:0 0 4px; font-size:.92rem; }
+    svg { display:block; width:100%; height:auto; min-height:300px; }
+    .axis { stroke:#b0b3b8; stroke-width:1.4; }
+    .gridline { stroke:#4a4e55; stroke-width:1; opacity:.58; }
+    .guide { stroke-width:1.2; stroke-dasharray:6 6; opacity:.9; }
+    .curve-blue { fill:none; stroke:var(--blue); stroke-width:4; stroke-linecap:round; }
+    .curve-green { fill:none; stroke:var(--green); stroke-width:4; stroke-linecap:round; }
+    .baseline { fill:none; stroke:var(--gray); stroke-width:2.5; stroke-dasharray:8 7; opacity:.7; }
+    .policy-line { stroke:var(--blue); stroke-width:2.6; }
+    .natural-line { stroke:var(--gray); stroke-width:2; stroke-dasharray:7 6; opacity:.75; }
+    .point-blue { fill:var(--blue); stroke:#17191d; stroke-width:3; }
+    .point-green { fill:var(--green); stroke:#17191d; stroke-width:3; }
+    .point-base { fill:var(--gray); stroke:#17191d; stroke-width:2; }
+    .svg-label { fill:#b9bcc2; font-size:12px; }
+    .svg-axis-label { fill:#f2f2f3; font-size:14px; font-weight:700; paint-order:stroke; stroke:#202226; stroke-width:4; stroke-linejoin:round; }
+    .flow { padding:16px 22px; text-align:center; font-weight:750; font-size:clamp(.9rem,2vw,1.05rem); color:#c9cbd0; border-bottom:1px solid #34373d; }
+    .flow .up { color:var(--blue); } .flow .down { color:var(--green); } .flow .flat { color:var(--gray); }
+    .explain { padding:15px 22px; margin:0; color:#d8d9dc; border-bottom:1px solid #34373d; font-family:Georgia, "Yu Mincho", serif; font-size:1.02rem; }
+    .metrics { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:#34373d; border-bottom:1px solid #34373d; }
+    .metric { background:#24272b; padding:12px 14px; min-width:0; }
+    .metric small { display:block; color:#969ba4; font-size:.74rem; margin-bottom:4px; }
+    .metric strong { font-size:1.02rem; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .controls { padding:18px 22px 22px; }
+    .controls-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px 20px; }
+    label.control { display:block; color:#d7d8db; font-size:.84rem; }
+    .control-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; }
+    .control-value { font-variant-numeric:tabular-nums; color:#fff; font-weight:700; }
+    input[type="range"] { width:100%; accent-color:var(--blue); }
+    details { margin-top:14px; border-top:1px solid #3a3d43; padding-top:12px; }
+    summary { cursor:pointer; color:#b9bcc4; font-size:.86rem; }
+    .advanced { margin-top:13px; }
+    .formula { margin:12px 0 0; color:#979ca5; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.78rem; overflow-x:auto; white-space:nowrap; }
+    .taylor-body { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr); border-top:1px solid #34373d; }
+    .taylor-chart { padding:14px 16px 10px; border-right:1px solid #34373d; }
+    .taylor-side { padding:18px 20px; }
+    .principle-badge { display:inline-flex; align-items:center; border-radius:999px; padding:6px 10px; background:#30343a; font-size:.82rem; margin-bottom:12px; }
+    .principle-badge.good { color:#95efbd; } .principle-badge.bad { color:#ff9c9c; } .principle-badge.edge { color:#f1cf7a; }
+    .taylor-side .controls-grid { grid-template-columns:1fr; gap:12px; }
+    .warning { margin:20px 2px 0; color:#aeb2b9; font-size:.86rem; }
+    @media (max-width:820px) {
+      .charts, .taylor-body { grid-template-columns:1fr; }
+      .chart-wrap + .chart-wrap, .taylor-chart { border-left:0; border-right:0; border-top:1px solid #34373d; }
+      .controls-grid { grid-template-columns:1fr 1fr; }
+      .metrics { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:520px) {
+      main { padding:14px 10px 30px; }
+      .lab { border-radius:18px; }
+      .lab-head, .flow, .explain, .controls { padding-left:15px; padding-right:15px; }
+      .controls-grid { grid-template-columns:1fr; }
+      .metrics { grid-template-columns:1fr 1fr; }
+      svg { min-height:250px; }
+    }
   </style>
 </head>
 <body>
 <main>
   <h1>ニュー・ケインジアン政策ラボ</h1>
-  <p class="lead">スライダーを動かして、「名目金利 → 期待実質金利 → GDPギャップ → インフレ」と Taylor principle の符号を確認するための教材です。</p>
+  <p class="lead">数式を「動く図」にします。政策金利や期待インフレ率を変えると、期待実質金利 → GDPギャップ → インフレ率がどう変わるかを同時に確認できます。</p>
 
-  <section class="panel">
-    <h2>A. 金利からGDPギャップ、インフレへ</h2>
-    <p class="formula">rᵉ = i − Eπ　 /　 x = E[x₊₁] − ((rᵉ − rⁿ) / σ)　 /　 π = βEπ + κx</p>
-    <div class="grid" id="transmissionInputs"></div>
-    <div class="cards">
-      <div class="card"><small>期待実質金利 rᵉ</small><strong id="realRate"></strong></div>
-      <div class="card"><small>金利ギャップ rᵉ − rⁿ</small><strong id="rateGap"></strong></div>
-      <div class="card"><small>GDPギャップ x</small><strong id="outputGap"></strong></div>
-      <div class="card"><small>現在のインフレ率 π</small><strong id="inflation"></strong></div>
-      <div class="card"><small>金融環境の方向</small><strong class="stance" id="stance"></strong></div>
+  <section class="lab" aria-labelledby="transmissionTitle">
+    <header class="lab-head">
+      <div>
+        <h2 id="transmissionTitle">A. 利上げは、どうインフレへ伝わるか</h2>
+        <p>左のIS曲線でGDPギャップが決まり、その同じGDPギャップを右のNKPCへ渡します。</p>
+      </div>
+      <div class="legend" aria-label="凡例">
+        <span><i class="swatch"></i> IS / 政策金利</span>
+        <span><i class="swatch green"></i> NKPC</span>
+        <span><i class="swatch gray"></i> 基準</span>
+      </div>
+    </header>
+
+    <div class="charts">
+      <div class="chart-wrap">
+        <p class="chart-title">IS：期待実質金利 → GDPギャップ</p>
+        <svg id="isChart" viewBox="0 0 560 340" role="img" aria-label="期待実質金利とGDPギャップの関係"></svg>
+      </div>
+      <div class="chart-wrap">
+        <p class="chart-title">NKPC：GDPギャップ → インフレ率</p>
+        <svg id="nkpcChart" viewBox="0 0 560 340" role="img" aria-label="GDPギャップとインフレ率の関係"></svg>
+      </div>
     </div>
-    <svg id="nkpcChart" viewBox="0 0 640 250" role="img" aria-label="GDPギャップとインフレ率の関係"></svg>
-    <p class="note">図の点は現在の設定です。GDPギャップが負でも、期待インフレ率が十分高ければ現在のインフレ率は正のままになり得ます。</p>
+
+    <div class="flow" id="flowText"></div>
+    <p class="explain" id="transmissionExplain"></p>
+
+    <div class="metrics">
+      <div class="metric"><small>名目金利 iₜ</small><strong id="mNominal"></strong></div>
+      <div class="metric"><small>期待実質金利 rᵉ</small><strong id="mReal"></strong></div>
+      <div class="metric"><small>金利ギャップ rᵉ−rⁿ</small><strong id="mRateGap"></strong></div>
+      <div class="metric"><small>GDPギャップ xₜ</small><strong id="mOutput"></strong></div>
+      <div class="metric"><small>インフレ率 πₜ</small><strong id="mInflation"></strong></div>
+    </div>
+
+    <div class="controls">
+      <div class="controls-grid" id="mainControls"></div>
+      <details>
+        <summary>モデルのパラメータも動かす</summary>
+        <div class="controls-grid advanced" id="advancedControls"></div>
+      </details>
+      <div class="formula">rᵉ = i − Eₜπₜ₊₁　　xₜ = Eₜxₜ₊₁ − (rᵉ − rₜⁿ)/σ　　πₜ = βEₜπₜ₊₁ + κxₜ</div>
+    </div>
   </section>
 
-  <section class="panel">
-    <h2>B. Taylor principle を動かす</h2>
-    <p class="formula">i = rⁿ + π* + φπ(π − π*) + φx x　 /　 rᵉ = i − Eπ₊₁</p>
-    <div class="grid" id="taylorInputs"></div>
-    <div class="cards">
-      <div class="card"><small>ルールが示す名目金利 i</small><strong id="policyRate"></strong></div>
-      <div class="card"><small>期待実質金利 rᵉ</small><strong id="taylorRealRate"></strong></div>
-      <div class="card"><small>自然利子率との差</small><strong id="taylorGap"></strong></div>
-      <div class="card"><small>Taylor principle</small><strong id="principle"></strong></div>
+  <section class="lab" aria-labelledby="taylorTitle">
+    <header class="lab-head">
+      <div>
+        <h2 id="taylorTitle">B. Taylor principle は何を防ぐのか</h2>
+        <p>インフレが1pt上がったとき、名目金利をどれだけ上げれば期待実質金利まで上がるのかを見ます。</p>
+      </div>
+      <div class="legend">
+        <span><i class="swatch"></i> 名目金利の反応</span>
+        <span><i class="swatch gray"></i> 期待インフレの反応</span>
+        <span><i class="swatch green"></i> 実質金利ギャップ</span>
+      </div>
+    </header>
+
+    <div class="taylor-body">
+      <div class="taylor-chart">
+        <svg id="taylorChart" viewBox="0 0 680 360" role="img" aria-label="Taylor principleのグラフ"></svg>
+        <div class="flow" id="taylorFlow"></div>
+      </div>
+      <aside class="taylor-side">
+        <div id="principleBadge" class="principle-badge"></div>
+        <p class="explain" id="taylorExplain" style="padding:0;border:0;font-size:.96rem"></p>
+        <div class="controls-grid" id="taylorControls"></div>
+        <div class="formula">Δi = φπΔπ + φx x　　Δrᵉ ≈ (φπ−1)Δπ + φx x</div>
+      </aside>
     </div>
-    <svg id="taylorChart" viewBox="0 0 640 250" role="img" aria-label="インフレギャップと実質金利ギャップの関係"></svg>
-    <p class="note">右の図では、期待インフレ率の乖離が現在のインフレ率の乖離と同じだけ動くと仮定した場合の実質金利ギャップを描きます。φπ &gt; 1 なら傾きは正になります。</p>
   </section>
 
-  <p class="warning">この教材は基本的な3式ニュー・ケインジアン・モデルの符号確認用です。実際の金融政策では、期待形成、供給ショック、金融摩擦、政策ラグなどをさらに考える必要があります。</p>
+  <p class="warning">※ 符号と伝播経路を確認するための基本3式モデルです。現実の金融政策では、供給ショック、期待形成、金融摩擦、政策ラグなどが加わります。</p>
 </main>
 <script type="module" src="./app.js"></script>
 </body>
