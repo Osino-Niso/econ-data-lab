@@ -720,7 +720,9 @@ $$
 
 今回の内容は、式を眺めるだけより、パラメータを実際に動かした方が分かりやすいと感じました。
 
-Zennの現行Markdown仕様ではStackBlitzの埋め込みに対応しているため、今回のDraftでは、公開GitHub上の小さな教材を記事内から操作できる形を試します。
+今回のDraftでは、公開GitHub上の小さな教材をStackBlitzで動かせるようにしています。
+
+当初は記事内への直接埋め込みを試しましたが、Safari上のZenn下書きでは読み込みが止まり、操作できませんでした。そこで、本文内に無理に埋め込まず、**教材を別タブで開いて操作する**形にします。
 
 教材は2つの実験に分けています。
 
@@ -756,10 +758,11 @@ Zennの現行Markdown仕様ではStackBlitzの埋め込みに対応している�
 
 $\phi_\pi$ を1より小さい値と大きい値で切り替え、インフレギャップが増えたときに実質金利ギャップがどちらへ動くかを確認します。
 
-<!-- Draft preview: publication時にはmain参照へ切り替える -->
-@[stackblitz](https://stackblitz.com/github/Osino-Niso/econ-data-lab/tree/dc5e70e384dde69bca47641a176318d15232ea30/interactive/nobel-2026-pricing-inflation?embed=1&view=preview&hideExplorer=1&hideNavigation=1&hidedevtools=1&startScript=start)
+以下から教材を開けます。
 
-もしZenn下書き上でこの埋め込みが正常に動かない場合でも、以下のPython / Rの再現コードだけで今回の重要な符号は確認できます。
+@[card](https://stackblitz.com/github/Osino-Niso/econ-data-lab/tree/7c029c5910276fa221af2d5c056b34bbec3b4bf5/interactive/nobel-2026-pricing-inflation?startScript=start&view=preview)
+
+外部教材を開かなくても、以下のPython / Rの再現コードだけで今回の重要な符号は確認できます。
 
 ## 13. Python / Rで3つのケースを比較する
 
@@ -933,7 +936,3 @@ $$
   https://www.federalreserve.gov/monetarypolicy/principles-for-the-conduct-of-monetary-policy.htm
 - John B. Taylor (1993), “Discretion versus policy rules in practice”  
   https://web.stanford.edu/~johntayl/Papers/Discretion.PDF
-- Zenn公式「ZennのMarkdown記法一覧」  
-  https://zenn.dev/zenn/articles/markdown-guide
-- StackBlitz Docs, “Importing projects” / “Embedding projects”  
-  https://developer.stackblitz.com/guides/user-guide/importing-projects
