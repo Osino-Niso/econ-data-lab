@@ -720,7 +720,7 @@ $$
 
 今回の内容は、式を眺めるだけより、パラメータを実際に動かした方が分かりやすいと感じました。
 
-公開GitHub上の小さな教材をStackBlitzで動かせるようにしています。記事内への直接埋め込みではなく、**以下のリンクから別タブで開いて操作する**形にしました。
+公開GitHub上のHTML / JavaScript教材を、GitHub Pagesからそのまま開けるようにしています。読者側ではnpmやWebContainerは不要で、**以下のリンクから通常のWebページとして開いて操作**できます。
 
 教材は2つの実験に分けています。
 
@@ -758,7 +758,7 @@ $\phi_\pi$ を1より小さい値と大きい値で切り替え、インフレ�
 
 以下から教材を開けます。
 
-@[card](https://stackblitz.com/github/Osino-Niso/econ-data-lab/tree/7c029c5910276fa221af2d5c056b34bbec3b4bf5/interactive/nobel-2026-pricing-inflation?startScript=start&view=preview)
+@[card](https://osino-niso.github.io/econ-data-lab/nobel-2026-pricing-inflation/)
 
 外部教材を開かなくても、以下のPython / Rの再現コードだけで今回の重要な符号は確認できます。
 
@@ -781,138 +781,142 @@ class Scenario:
     name: str
     nominal_rate: float
     expected_inflation: float
-    natural_rate: float
-    sigma: float = 1.0
-    expected_next_gap: float = 0.0
-    beta: float = 0.99
-    kappa: float = 0.10
 
 
-def evaluate(s: Scenario):
+natural_rate = 0.01
+expected_next_gap = 0.0
+sigma = 1.0
+beta = 0.99
+kappa = 0.10
+
+scenarios = [
+    Scenario("neutral", 0.03, 0.02),
+    Scenario("nominal_hike", 0.04, 0.02),
+    Scenario("hike_but_expectations_rise_more", 0.04, 0.035),
+]
+
+for s in scenarios:
     expected_real_rate = s.nominal_rate - s.expected_inflation
-    interest_gap = expected_real_rate - s.natural_rate
-    output_gap = s.expected_next_gap - interest_gap / s.sigma
-    inflation = s.beta * s.expected_inflation + s.kappa * output_gap
-    return expected_real_rate, interest_gap, output_gap, inflation
+    interest_gap = expected_real_rate - natural_rate
+    output_gap = expected_next_gap - interest_gap / sigma
+    inflation = beta * s.expected_inflation + kappa * output_gap
+
+    print(
+        s.name,
+        f"real={expected_real_rate * 100:.2f}%",
+        f"interest_gap={interest_gap * 100:.2f}%pt",
+        f"output_gap={output_gap * 100:.2f}%",
+        f"inflation={inflation * 100:.2f}%",
+    )
 ```
-
-3ケースを計算すると、概ね次の結果になります。
-
-| ケース | 期待実質金利 | 金利ギャップ | GDPギャップ | インフレ率 |
-| --- | ---: | ---: | ---: | ---: |
-| 基準：$i=3\%, E\pi=2\%$ | 1.00% | 0.00% | 0.00% | 1.98% |
-| 名目金利だけ1pt上昇 | 2.00% | +1.00% | -1.00% | 1.88% |
-| $i=4\%$ だが $E\pi=3.5\%$ | 0.50% | -0.50% | +0.50% | 3.52% |
-
-2行目では、GDPギャップは負ですがインフレ率はまだ正です。
-
-3行目では、名目金利は基準より高いのに、期待実質金利は自然利子率を下回っています。
-
-今回確認したかった2つの注意点が、そのまま数字に出ています。
-
-完全なコードはGitHubに置きます。
 
 ### R
 
-Rでも計算は同じです。
-
 ```r
-expected_real_rate <- nominal_rate - expected_inflation
-interest_gap <- expected_real_rate - natural_rate
-output_gap <- expected_next_gap - interest_gap / sigma
-inflation <- beta * expected_inflation + kappa * output_gap
+natural_rate <- 0.01
+expected_next_gap <- 0.0
+sigma <- 1.0
+beta <- 0.99
+kappa <- 0.10
+
+scenarios <- data.frame(
+  name = c(
+    "neutral",
+    "nominal_hike",
+    "hike_but_expectations_rise_more"
+  ),
+  nominal_rate = c(0.03, 0.04, 0.04),
+  expected_inflation = c(0.02, 0.02, 0.035)
+)
+
+scenarios$expected_real_rate <-
+  scenarios$nominal_rate - scenarios$expected_inflation
+
+scenarios$interest_gap <-
+  scenarios$expected_real_rate - natural_rate
+
+scenarios$output_gap <-
+  expected_next_gap - scenarios$interest_gap / sigma
+
+scenarios$inflation <-
+  beta * scenarios$expected_inflation +
+  kappa * scenarios$output_gap
+
+print(transform(
+  scenarios,
+  expected_real_rate = expected_real_rate * 100,
+  interest_gap = interest_gap * 100,
+  output_gap = output_gap * 100,
+  inflation = inflation * 100
+))
 ```
 
-Python/Rの目的は、理論をコードに置き換えること自体ではありません。
+見るべきなのは数値そのものではなく、
 
-**符号を取り違えていないかを、自分で数値を変えて確認すること**です。
+```text
+期待実質金利 − 自然利子率
+        ↓
+GDPギャップ
+        ↓
+インフレ率への圧力
+```
 
-## 14. これは「現実のインフレを3本の式だけで全部説明できる」という話ではない
+という符号です。
 
-最後に、今回のモデルの範囲をはっきりさせておきます。
+## 14. この3本の式は、現実のインフレを全部説明するわけではない
 
-基本NKPC
-
-$$
-\pi_t
-=
-\beta E_t\pi_{t+1}
-+\kappa x_t
-$$
-
-は、価格硬直性、期待、限界費用、需要圧力の関係を理解するには非常に便利です。
-
-一方、実際のインフレには、
-
-- エネルギー価格などの供給ショック
-- 過去のインフレの持続性
-- 企業ごとの価格変更頻度の違い
-- 金融摩擦
-- 期待形成の違い
-
-なども関わります。
-
-そのため、より一般的にはコストプッシュ・ショック $u_t$ を加えて
+ここまで扱ったNKPCは、基本モデルを理解するためのかなり単純化された形です。
 
 $$
 \pi_t
 =
 \beta E_t\pi_{t+1}
 +\kappa x_t
-+u_t
 $$
 
-と書いたり、過去のインフレも含む拡張形を使ったりします。
+だけを見れば、インフレ率は期待インフレ率とGDPギャップだけで決まるように見えます。
 
-San Francisco Fedの解説も、基本NKPCは教育的には有用な一方、実際のインフレの持続性などを十分に再現できない問題があると指摘しています。
+しかし現実には、原油価格、輸入価格、為替、生産性、賃金設定、インフレの慣性なども重要です。
 
-この記事でやりたかったのは、現実のインフレを完全に予測することではありません。
+そのため、実際の分析では供給ショックの項を加えたり、過去のインフレ率を含むハイブリッド型NKPCを考えたりします。
 
-> **金利、需要、限界費用、企業の価格設定、期待が、基本モデルの中でどうつながるのか**
+San Francisco Fedも、基本NKPCは理論上重要なベンチマークである一方、現実のインフレの持続性を説明するうえで課題があると指摘しています。
 
-を一本の経路として理解することです。
+この記事で確認したいのは、現実のインフレをこの3本だけで予測することではありません。
+
+> **家計の需要、企業の価格設定、中央銀行の金利決定を、ミクロ的な行動から一つのモデルにまとめられる**
+
+というWoodford型の枠組みの骨格です。
 
 ## まとめ
 
-今回、前回の記事の続きを追ったことで、私の中では次のようにつながりました。
+第6記事と今回の記事を合わせると、私の中では次の流れになりました。
 
-1. 差別化された商品を売る企業の柔軟価格は、限界費用にマークアップを乗せた形で考えられる。
-2. 現実には価格が毎期自由に変わるわけではなく、価格の硬直性がある。
-3. Calvo型の価格設定では、今日決めた価格を将来も使う可能性があるため、企業は将来の費用や物価も見て価格を決める。
-4. その結果、現在のインフレ率は期待将来インフレと実質限界費用に依存する。
-5. 基本モデルで限界費用をGDPギャップへ結び付けると、$\pi_t=\beta E_t\pi_{t+1}+\kappa x_t$ というNKPCになる。
-6. $x_t<0$ はインフレ率が必ず負になるという意味ではなく、インフレ率への下押し圧力である。
-7. 金融政策では、名目金利そのものより $i_t-E_t\pi_{t+1}$ という期待実質金利と自然利子率との差が重要になる。
-8. Taylor ruleを加えると、中央銀行の金利決定まで含めて需要・供給・金融政策の3本の式がつながる。
-9. Taylor principleでは、インフレ上昇に対して名目金利が十分強く反応しないと、期待実質金利が下がって需要を刺激する方向へ働く可能性がある。
+1. 家計は将来を見ながら今期と将来の消費を選ぶ。
+2. 期待実質金利が自然利子率を上回ると、需要とGDPギャップを抑える方向に働く。
+3. 企業は差別化された商品を売り、柔軟価格なら限界費用にマークアップを乗せた価格を設定する。
+4. 価格が硬直的なら、企業は将来の限界費用や他社価格まで考えて今日の価格を決める。
+5. その前向きな価格設定を集計すると、期待インフレ率とGDPギャップを含むNKPCにつながる。
+6. 負のGDPギャップはインフレ率そのものを負にするのではなく、インフレ率への下押し圧力になる。
+7. 金融政策では、名目金利ではなく期待実質金利と自然利子率の差を見る必要がある。
+8. Taylor ruleを加えると、中央銀行の金利決定までモデル内に入る。
+9. Taylor principleでは、インフレ上昇に対して名目金利を1対1より強く上げることが、期待実質金利を上げて需要を抑える方向のフィードバックにつながる。
 
-前回の記事の最後では、まだ
+2026年ノーベル経済学賞をきっかけに、第6記事では需要側、今回は供給側と中央銀行まで追いました。
 
-> **そもそもインフレ率は何によって決まるのか？**
+細かい導出や、賃金硬直性、供給ショック、ゼロ金利制約、非伝統的金融政策などはまだ残っています。
 
-が残っていました。
-
-今回、企業の価格設定まで追ったことで、少なくとも基本的なニュー・ケインジアン・モデルについては、
+それでも、
 
 $$
-\text{家計}
+\text{Hall}
 \rightarrow
-\text{需要}
+\text{Woodford}
 \rightarrow
-\text{GDPギャップ}
-\rightarrow
-\text{企業の限界費用と価格設定}
-\rightarrow
-\text{インフレ}
-\rightarrow
-\text{中央銀行の金利反応}
+\text{ニュー・ケインジアン型のマクロ経済安定化政策}
 $$
 
-まで一巡させることができました。
-
-細部や発展形はまだかなり残っています。
-
-それでも、2026年の受賞理由にある **“microeconomic foundations of macroeconomic stabilisation”** が、ニュースの一文ではなく、家計と企業の最適化から金融政策までつながるモデルとして見えるようになりました。
+という大きな流れについては、少なくとも私自身が数式の符号を追える程度には具体的に見えるようになりました。
 
 ## 参考資料
 
