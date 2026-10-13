@@ -1,0 +1,62 @@
+name: Deploy interactive labs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - draft/nobel-2026-pricing-inflation
+    paths:
+      - "interactive/**"
+      - ".github/workflows/deploy-interactive-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare static site
+        run: |
+          rm -rf _site
+          mkdir -p _site/nobel-2026-pricing-inflation
+          cp interactive/nobel-2026-pricing-inflation/index.html _site/nobel-2026-pricing-inflation/
+          cp interactive/nobel-2026-pricing-inflation/app.js _site/nobel-2026-pricing-inflation/
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="ja">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>経済データ実験室 — Interactive Labs</title>
+          </head>
+          <body>
+            <main>
+              <h1>経済データ実験室 — Interactive Labs</h1>
+              <p><a href="./nobel-2026-pricing-inflation/">ニュー・ケインジアン政策ラボ</a></p>
+            </main>
+          </body>
+          </html>
+          HTML
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
