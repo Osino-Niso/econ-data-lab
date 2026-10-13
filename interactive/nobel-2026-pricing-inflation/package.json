@@ -6,7 +6,10 @@
     "start": "vite --host 0.0.0.0",
     "build": "vite build"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "vite": "^7.1.7"
+    "vite": "6.4.1"
   }
 }
