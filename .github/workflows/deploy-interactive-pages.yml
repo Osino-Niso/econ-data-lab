@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - draft/nobel-2026-pricing-inflation
     paths:
       - "interactive/**"
       - ".github/workflows/deploy-interactive-pages.yml"
