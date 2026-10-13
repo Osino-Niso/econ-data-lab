@@ -19,8 +19,9 @@ jobs:
           ref: draft/nobel-2026-pricing-inflation
 
       - name: Update article text
-        shell: python
+        shell: bash
         run: |
+          python - <<'PY'
           from pathlib import Path
 
           path = Path("articles/nobel-2026-pricing-inflation.md")
@@ -151,6 +152,7 @@ $$
 
           text = text[:start] + new_section + text[end:]
           path.write_text(text, encoding="utf-8")
+          PY
 
       - name: Commit final polish
         run: |
