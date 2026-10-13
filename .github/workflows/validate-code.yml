@@ -6,6 +6,7 @@ on:
       - "code/**"
       - "articles/**"
       - "images/**"
+      - "interactive/**"
       - ".github/workflows/validate-code.yml"
   push:
     branches:
@@ -14,6 +15,7 @@ on:
       - "code/**"
       - "articles/**"
       - "images/**"
+      - "interactive/**"
       - ".github/workflows/validate-code.yml"
   workflow_dispatch:
 
@@ -58,6 +60,10 @@ jobs:
         run: |
           python code/nobel-2026-hall-woodford/python.py | tee ci-output/nobel-2026-hall-woodford-python.txt
 
+      - name: Run Nobel 2026 pricing-inflation example
+        run: |
+          python code/nobel-2026-pricing-inflation/python.py | tee ci-output/nobel-2026-pricing-inflation-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -93,6 +99,12 @@ jobs:
         with:
           name: nobel-2026-hall-woodford-python-output
           path: ci-output/nobel-2026-hall-woodford-python.txt
+
+      - name: Save Nobel 2026 pricing-inflation Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nobel-2026-pricing-inflation-python-output
+          path: ci-output/nobel-2026-pricing-inflation-python.txt
 
       - name: Save sampling distribution plot
         uses: actions/upload-artifact@v4
@@ -141,6 +153,10 @@ jobs:
         run: |
           Rscript code/nobel-2026-hall-woodford/r.R | tee ci-output/nobel-2026-hall-woodford-r.txt
 
+      - name: Run Nobel 2026 pricing-inflation example
+        run: |
+          Rscript code/nobel-2026-pricing-inflation/r.R | tee ci-output/nobel-2026-pricing-inflation-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -176,3 +192,32 @@ jobs:
         with:
           name: nobel-2026-hall-woodford-r-output
           path: ci-output/nobel-2026-hall-woodford-r.txt
+
+      - name: Save Nobel 2026 pricing-inflation R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: nobel-2026-pricing-inflation-r-output
+          path: ci-output/nobel-2026-pricing-inflation-r.txt
+
+  interactive:
+    name: Interactive lab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check JavaScript syntax
+        run: node --check interactive/nobel-2026-pricing-inflation/app.js
+
+      - name: Install interactive lab dependencies
+        working-directory: interactive/nobel-2026-pricing-inflation
+        run: npm install
+
+      - name: Build interactive lab
+        working-directory: interactive/nobel-2026-pricing-inflation
+        run: npm run build
