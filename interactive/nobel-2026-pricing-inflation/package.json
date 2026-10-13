@@ -1,0 +1,11 @@
+{
+  "name": "nk-policy-lab",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "vite --host 0.0.0.0"
+  },
+  "dependencies": {
+    "vite": "^7.1.7"
+  }
+}
