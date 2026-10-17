@@ -64,6 +64,10 @@ jobs:
         run: |
           python code/nobel-2026-pricing-inflation/python.py | tee ci-output/nobel-2026-pricing-inflation-python.txt
 
+      - name: Run endogeneity sample-size example
+        run: |
+          python code/endogeneity-sample-size/python.py | tee ci-output/endogeneity-sample-size-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -105,6 +109,12 @@ jobs:
         with:
           name: nobel-2026-pricing-inflation-python-output
           path: ci-output/nobel-2026-pricing-inflation-python.txt
+
+      - name: Save endogeneity sample-size Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: endogeneity-sample-size-python-output
+          path: ci-output/endogeneity-sample-size-python.txt
 
       - name: Save sampling distribution plot
         uses: actions/upload-artifact@v4
@@ -157,6 +167,10 @@ jobs:
         run: |
           Rscript code/nobel-2026-pricing-inflation/r.R | tee ci-output/nobel-2026-pricing-inflation-r.txt
 
+      - name: Run endogeneity sample-size example
+        run: |
+          Rscript code/endogeneity-sample-size/r.R | tee ci-output/endogeneity-sample-size-r.txt
+
       - name: Save R output
         uses: actions/upload-artifact@v4
         with:
@@ -198,6 +212,12 @@ jobs:
         with:
           name: nobel-2026-pricing-inflation-r-output
           path: ci-output/nobel-2026-pricing-inflation-r.txt
+
+      - name: Save endogeneity sample-size R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: endogeneity-sample-size-r-output
+          path: ci-output/endogeneity-sample-size-r.txt
 
   interactive:
     name: Interactive lab
