@@ -28,6 +28,12 @@ published: false
 
 ## 先に結論
 
+ここでいう「真値2」は、後で設定する**元のデータ生成過程におけるXの係数**です。Zを省いた単回帰の母集団線形射影係数とは異なります。
+
+また、標本数を増やしたときに推定量がある値へ確率的に近づくことを**確率収束**と呼び、$\hat\beta_n\xrightarrow{p}b$ と書きます。$\operatorname{plim}\hat\beta_n=b$ も同じ意味です。以下では前者に統一します。
+
+## 先に結論
+
 単回帰モデル
 
 $$
@@ -47,7 +53,7 @@ $$
 
 と書けます。
 
-標本数が十分大きいとき、この第2項は大ざっぱには
+分子・分母をそれぞれ $n$ で割ると、標本共分散と標本分散の比として読めます。独立同分布や有限のモーメントなど通常の大標本条件の下では、大数の法則によってこの比は
 
 $$
 \frac{\operatorname{Cov}(X,u)}{\operatorname{Var}(X)}
@@ -64,7 +70,7 @@ $$
 なら、
 
 $$
-\operatorname{plim}\hat\beta_1
+\hat\beta_1\xrightarrow{p}
 =
 \beta_1
 +
@@ -187,8 +193,7 @@ $$
 したがって、大標本では
 
 $$
-\hat\beta
-\to_p 2
+\hat\beta\xrightarrow{p}2
 $$
 
 となります。
@@ -253,6 +258,8 @@ $$
 ここが今回の記事の中心です。
 
 ## 5. Pythonで1000回ずつ推定してみる
+
+**図の読み方：** 横軸は推定された傾き、縦軸はその頻度です。真値2と、内生性がある場合の収束先約2.7317を縦線で示すと、標本数を増やしても後者の周りで分布が狭くなる様子が分かります。以下のコードを実行すれば、表だけでなくその図も生成できます。
 
 $X$ の係数の真値を2に固定し、標本数を
 
@@ -322,6 +329,8 @@ for n in SAMPLE_SIZES:
 | 内生性なし | 5000 | 2.0018 | 0.0254 |
 | 内生性あり | 5000 | 2.7321 | 0.0165 |
 
+この標準偏差は、推定量の標本分布の標準偏差（標準誤差）を1000回の反復で近似したものです。1回の回帰から計算する推定標準誤差とは区別してください。
+
 見るべきなのは、**平均と標準偏差を分けること**です。
 
 内生性なしでは、標本数を増やすと、
@@ -342,7 +351,35 @@ for n in SAMPLE_SIZES:
 
 しかし、その推定値は**間違った値の周りに非常に安定して集まっています**。
 
+
+### 分布を描く
+
+以下を上のPythonコードの末尾に追加してください。
+
+```python
+import matplotlib.pyplot as plt
+
+rng_plot = np.random.default_rng(SEED)
+fig, axes = plt.subplots(1, 3, figsize=(12, 3.5), sharey=True)
+for ax, n in zip(axes, SAMPLE_SIZES):
+    estimates = [simulate_slope(rng_plot, n, True) for _ in range(REPS)]
+    ax.hist(estimates, bins=35, density=True, alpha=0.65)
+    ax.axvline(2, color="black", linestyle="--", label="True coefficient: 2")
+    ax.axvline(2 + 1.2 / 1.64, color="red", linestyle=":", label="OLS limit: 2.7317")
+    ax.set_xlim(1.5, 3.4)
+    ax.set_title(f"n = {n}")
+    ax.set_xlabel("Estimated slope")
+axes[0].set_ylabel("Density")
+axes[-1].legend(loc="upper left", fontsize=7)
+fig.tight_layout()
+plt.show()
+```
+
+図では、3つのパネルで**横軸の範囲を固定**しています。これにより、標本数が増えるほど分布が狭くなることを同じ尺度で比較できます。
+
 ## 6. Rでも同じことを確認する
+
+:::details Rコードを開く
 
 Rでも同じ実験ができます。
 
@@ -401,7 +438,9 @@ RとPythonでは乱数生成器が違うため、有限回のシミュレーシ�
 
 という構造は同じです。
 
-## 7. 「精密」と「正確」を分ける
+:::
+
+## 7. 「ばらつきが小さい」と「一致している」は別
 
 この例から分かるのは、推定値の評価には少なくとも2つの方向があるということです。
 
