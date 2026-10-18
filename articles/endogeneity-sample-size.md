@@ -100,7 +100,7 @@ $$
 
 $
 \hat\beta\xrightarrow{p}2
-$$
+$
 
 となります。
 
