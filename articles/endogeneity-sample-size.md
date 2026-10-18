@@ -3,7 +3,7 @@ title: "標本数を増やせば内生性は解決する？ データを増や�
 emoji: "🎯"
 type: "tech"
 topics: ["econometrics", "statistics", "python", "r"]
-published: false
+published: true
 ---
 
 計量経済学では、標本数が大きくなると推定が安定すると習います。では、説明変数と誤差項が相関する**内生性**があっても、データを十分に集めれば問題を解決できるのでしょうか。
