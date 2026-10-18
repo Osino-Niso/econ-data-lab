@@ -53,8 +53,8 @@ def distributions():
                             gridspec_kw={"hspace": .47})
     fig.suptitle("標本数を増やすと、推定値はどこへ集まる？",
                  fontsize=20, fontweight="bold", y=.987)
-    fig.text(.5,.948,"各条件で1,000回のOLS推定｜横軸は全パネルで共通",
-             ha="center",fontsize=12.3)
+    fig.text(.5,.948,"各条件1,000回・破線は理論的な収束先（青2／橙2.732）",
+             ha="center",fontsize=12.0)
     for ax, n in zip(axs, SAMPLE_SIZES):
         # The ordering is intentionally identical to code/endogeneity-sample-size/python.py
         for endogenous, color, label in ((False,BLUE,"内生性なし"),
@@ -80,10 +80,6 @@ def distributions():
         Line2D([],[],color=ORANGE,lw=4,label="内生性あり")],
         loc="lower center",ncol=2,frameon=False,fontsize=12,
         bbox_to_anchor=(.5,.044))
-    fig.text(.5,.118,"青の収束先 = 2.000 ｜ 橙の収束先 ≈ 2.732",
-             ha="center",fontsize=12,weight="bold")
-    fig.text(.5,.088,"縦の破線：各条件の理論的な確率収束先",
-             ha="center",fontsize=11.5)
     axs[-1].set_xlabel("推定された X の係数（傾き）",fontsize=13,labelpad=8)
     fig.subplots_adjust(left=.105,right=.96,top=.902,bottom=.168)
     save(fig,"endogeneity-sample-size-distributions.webp")
@@ -137,9 +133,9 @@ def structure():
     ax.add_patch(FancyArrowPatch((.275,.305),(.68,.305),
         arrowstyle="<->",mutation_scale=16,color=BLUE,lw=2.4,
         linestyle=(0,(4,3)),connectionstyle="arc3,rad=0"))
-    ax.text(.50,.355,"単回帰の傾き ≈ 2.73（因果効果とは限らない）",
-            ha="center",fontsize=12.8,color=BLUE,weight="bold")
-    arrow(ax,(.593,.239),(.702,.273),ORANGE,2.4)
+    ax.text(.50,.389,"XとYの単回帰：傾き ≈ 2.73",
+            ha="center",fontsize=13.0,color=BLUE,weight="bold")
+    # u enters the omitted-variable equation; do not draw a causal u -> Y arrow here.
     ax.add_patch(FancyArrowPatch((.225,.264),(.323,.219),
         arrowstyle="<->",mutation_scale=15,color="#8B4B70",lw=2.2,
         linestyle=(0,(3,3)),connectionstyle="arc3,rad=-.15"))
