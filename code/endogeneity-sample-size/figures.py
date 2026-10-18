@@ -77,12 +77,13 @@ def distributions():
         ax.tick_params(axis="x",labelbottom=True,labelsize=11)
     fig.legend(handles=[
         Line2D([],[],color=BLUE,lw=4,label="内生性なし"),
-        Line2D([],[],color=ORANGE,lw=4,label="内生性あり"),
-        Line2D([],[],color=NAVY,ls="--",lw=1.6,label="破線＝各条件の理論的収束先")],
-        loc="lower center",ncol=3,frameon=False,fontsize=10.6,
-        bbox_to_anchor=(.5,.055))
-    fig.text(.5,.091,"青の収束先 = 2.000 ｜ 橙の収束先 ≈ 2.732",
-             ha="center",fontsize=11.3,weight="bold")
+        Line2D([],[],color=ORANGE,lw=4,label="内生性あり")],
+        loc="lower center",ncol=2,frameon=False,fontsize=12,
+        bbox_to_anchor=(.5,.044))
+    fig.text(.5,.118,"青の収束先 = 2.000 ｜ 橙の収束先 ≈ 2.732",
+             ha="center",fontsize=12,weight="bold")
+    fig.text(.5,.088,"縦の破線：各条件の理論的な確率収束先",
+             ha="center",fontsize=11.5)
     axs[-1].set_xlabel("推定された X の係数（傾き）",fontsize=13,labelpad=8)
     fig.subplots_adjust(left=.105,right=.96,top=.902,bottom=.168)
     save(fig,"endogeneity-sample-size-distributions.webp")
@@ -124,7 +125,7 @@ def structure():
     arrow(ax,(.854,.605),(.771,.605),"#778C9A",1.75)
     ax.text(.5,.535,"Y = 1 + 2X + 1.5Z + ε",ha="center",fontsize=14.5,
             bbox={"fc":"white","ec":"none","pad":6})
-    ax.text(.035,.447,"② Zを落とした単回帰モデル",
+    ax.text(.035,.447,"② Zを落としたときに観察される関連",
             ha="left",fontsize=15.5,weight="bold")
     ax.add_patch(FancyBboxPatch((.025,.10),.95,.323,
         boxstyle="round,pad=.01,rounding_size=.025",
@@ -132,17 +133,23 @@ def structure():
     node(ax,.18,.305,.17,.077,"X","#E8F5FA",BLUE,18)
     node(ax,.77,.305,.17,.077,"Y","#E9F1FA",NAVY,18)
     node(ax,.48,.210,.30,.071,"u = 1.5Z + ε","#FFF0E5",ORANGE,15)
-    arrow(ax,(.275,.305),(.68,.305),BLUE)
-    ax.text(.48,.329,"β（推定対象）",ha="center",fontsize=13,color=BLUE)
+    # Lower panel depicts statistical association, NOT a causal X -> Y arrow.
+    ax.add_patch(FancyArrowPatch((.275,.305),(.68,.305),
+        arrowstyle="<->",mutation_scale=16,color=BLUE,lw=2.4,
+        linestyle=(0,(4,3)),connectionstyle="arc3,rad=0"))
+    ax.text(.50,.355,"単回帰の傾き ≈ 2.73（因果効果とは限らない）",
+            ha="center",fontsize=12.8,color=BLUE,weight="bold")
     arrow(ax,(.593,.239),(.702,.273),ORANGE,2.4)
     ax.add_patch(FancyArrowPatch((.225,.264),(.323,.219),
         arrowstyle="<->",mutation_scale=15,color="#8B4B70",lw=2.2,
         linestyle=(0,(3,3)),connectionstyle="arc3,rad=-.15"))
     ax.text(.095,.147,"Xとuは相関",color="#8B4B70",fontsize=12.4,ha="left")
-    ax.text(.59,.116,"Zの寄与がuに入り、Xとuが相関する",
+    ax.text(.59,.121,"Zの寄与がuに入り、Xとuが相関する",
             ha="center",fontsize=12.3)
-    ax.text(.5,.058,"実線矢印：生成過程・モデル内の方向 ｜ 点線両矢印：統計的相関",
-            ha="center",fontsize=10.6,color="#46606F")
+    ax.text(.5,.060,"上段の実線矢印＝仮定したデータ生成過程",
+            ha="center",fontsize=12,color="#46606F")
+    ax.text(.5,.035,"下段の点線両矢印＝統計的な関連（因果の矢印ではない）",
+            ha="center",fontsize=11.5,color="#46606F")
     save(fig,"endogeneity-sample-size-structure.webp")
 
 if __name__ == "__main__":
