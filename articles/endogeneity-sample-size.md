@@ -212,12 +212,12 @@ $$
 
 そうではありません。約2.73は、$X$ と $Y$ の**母集団での線形な関連**を表す傾きです。これを母集団線形射影係数と呼び、$\beta_{\mathrm{LP}}$ と書きます。
 
-$
+$$
 \beta_{\mathrm{LP}}
 =\frac{\operatorname{Cov}(X,Y)}{\operatorname{Var}(X)}
 =2+\frac{\operatorname{Cov}(X,u)}{\operatorname{Var}(X)}
 \approx2.7317
-$
+$$
 
 今回の構造係数は $\beta_X=2$、単回帰の線形射影係数は $\beta_{\mathrm{LP}}\approx2.73$ です。**知りたいのが構造係数2なら、約2.73へ収束するOLSは一致推定量ではありません。** ただし、線形な関連を記述・予測する目的なら、約2.73にも意味があります。
 
@@ -225,23 +225,23 @@ $
 
 $Y$ を $a+bX$ という直線で予測するとします。ここで $a$ は切片、$b$ は傾きです。母集団での予測誤差の二乗平均
 
-$
+$$
 E[(Y-a-bX)^2]
-$
+$$
 
 を最小にする $a,b$ を選ぶと、固定した $b$ に対して最適な切片は $a=E[Y]-bE[X]$ です。これを代入すると、
 
-$
+$$
 \operatorname{Var}(Y)
 -2b\operatorname{Cov}(X,Y)
 +b^2\operatorname{Var}(X)
-$
+$$
 
 となります。$\operatorname{Var}(X)>0$ なら、この二次式を最小にする傾きは
 
-$
+$$
 b=\frac{\operatorname{Cov}(X,Y)}{\operatorname{Var}(X)}
-$
+$$
 
 です。今回の $Y=1+2X+u$ を代入すると、本文の約2.73が得られます。これは**直線による予測に適した傾き**であり、構造係数2と同じである必要はありません。
 
