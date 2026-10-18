@@ -26,7 +26,7 @@ published: false
 
 なお、この記事では単回帰に話を限定し、**説明変数 $X$ と誤差項 $u$ が相関する状態**を内生性と呼びます。
 
-## 先に結論
+## この記事でいう「真値」と「収束先」
 
 ここでいう「真値2」は、後で設定する**元のデータ生成過程におけるXの係数**です。Zを省いた単回帰の母集団線形射影係数とは異なります。
 
@@ -71,7 +71,6 @@ $$
 
 $$
 \hat\beta_1\xrightarrow{p}
-=
 \beta_1
 +
 \frac{\operatorname{Cov}(X,u)}{\operatorname{Var}(X)}
@@ -151,6 +150,11 @@ $$
 しかし、$X$ と $Z$ が関連しているなら、$X$ は誤差項 $u$ とも関連してしまいます。
 
 これが、欠落変数によって内生性が生じる基本的な形です。
+
+![欠落変数ZがXとYに影響し、省略後の誤差項uとXが相関する仕組み](/images/endogeneity-sample-size-structure.webp)
+*図1：上段はデータ生成過程、下段はZを省いた単回帰モデルです。実線矢印は生成過程・モデル内の方向、紫の点線両矢印は統計的相関を表します。*
+
+**見るべき箇所は、上段でZからXとYの両方へ矢印が伸びている点です。** 下段ではZの寄与が誤差項 $u=1.5Z+\varepsilon$ に入り、$X$ と $u$ に相関が生じます。紫の線は因果矢印ではありません。なお、これは設定したデータ生成過程を図示したもので、一般に「相関があれば因果関係がある」という意味ではありません。
 
 以前の記事では、ゼロ条件付き平均
 
@@ -352,30 +356,26 @@ for n in SAMPLE_SIZES:
 しかし、その推定値は**間違った値の周りに非常に安定して集まっています**。
 
 
-### 分布を描く
+### 分布を図で比較する
 
-以下を上のPythonコードの末尾に追加してください。
+![標本数50・500・5000で内生性あり・なしのOLS推定量の分布を比較する図](/images/endogeneity-sample-size-distributions.webp)
+*図2：各条件で1,000回推定した傾きの分布をカーネル密度推定で滑らかに描いたもの。青は内生性なし、橙は内生性あり。破線はそれぞれの理論的な確率収束先です。横軸の範囲は3段とも共通ですが、縦軸の密度尺度は段ごとに異なります。*
 
-```python
-import matplotlib.pyplot as plt
+**上から下へ追うと分布が細くなります。** しかし、青は真値2に、橙は約2.7317に集中します。特に最下段では、両方ともばらつきは小さいのに、集中する場所が明らかに違います。これが「標本数を増やしても内生性は解決しない」という意味です。
 
-rng_plot = np.random.default_rng(SEED)
-fig, axes = plt.subplots(1, 3, figsize=(12, 3.5), sharey=True)
-for ax, n in zip(axes, SAMPLE_SIZES):
-    estimates = [simulate_slope(rng_plot, n, True) for _ in range(REPS)]
-    ax.hist(estimates, bins=35, density=True, alpha=0.65)
-    ax.axvline(2, color="black", linestyle="--", label="True coefficient: 2")
-    ax.axvline(2 + 1.2 / 1.64, color="red", linestyle=":", label="OLS limit: 2.7317")
-    ax.set_xlim(1.5, 3.4)
-    ax.set_title(f"n = {n}")
-    ax.set_xlabel("Estimated slope")
-axes[0].set_ylabel("Density")
-axes[-1].legend(loc="upper left", fontsize=7)
-fig.tight_layout()
-plt.show()
+### 分布図の再現
+
+上の集計用Pythonコードと同じ乱数シード・生成順序を使用した図版生成コードをGitHubに置いています。
+
+- [図版生成用Pythonコード（2枚の図を生成）](https://github.com/Osino-Niso/econ-data-lab/blob/main/code/endogeneity-sample-size/figures.py)
+
+必要ライブラリ（NumPy / Matplotlib / Pillow）と日本語フォントを用意し、リポジトリ直下で次を実行してください。
+
+```bash
+python code/endogeneity-sample-size/figures.py
 ```
 
-図では、3つのパネルで**横軸の範囲を固定**しています。これにより、標本数が増えるほど分布が狭くなることを同じ尺度で比較できます。
+出力ファイルは `images/endogeneity-sample-size-distributions.webp` と `images/endogeneity-sample-size-structure.webp` です。
 
 ## 6. Rでも同じことを確認する
 
