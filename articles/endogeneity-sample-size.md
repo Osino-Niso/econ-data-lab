@@ -44,7 +44,7 @@ $$
 
 $Y$ は結果を表す変数、$X$ は係数を知りたい説明変数、$Z$ はもう1つの説明変数、$\varepsilon$ は残りのランダムな要因です。定数項は1です。
 
-例えば、$X$ を教育年数、$Y$ を賃金、$Z$ を学習意欲だと考えてみてください。学習意欲が高い人ほど教育年数が長く、賃金にも学習意欲が関係するなら、$Z$ を省いた単回帰には教育年数だけでなく学習意欲との関連も混ざります。これは仕組みを想像するための例であり、実際の教育年数・賃金についてこの因果構造や数値が成り立つと主張するものではありません。
+例えば、$X$ を教育年数、$Y$ を賃金、$Z$ を学習意欲だと考えてみてください。学習意欲が高い人ほど教育年数が長く、賃金にも学習意欲が関係するなら、$Z$ を省いた単回帰には教育年数だけでなく学習意欲との関連も混ざります。これは仕組みを想像するための例であり、実際の教育年数・賃金についてこの因果構造や数値が成り立つと主張するものではありません。後で正規分布から生成する $X$、$Z$、$Y$ も、現実の教育年数・学習意欲・賃金の生の値を再現したものではなく、変数同士の関係を調べるための人工的な数値です。
 
 ここで知りたいのは、元の式における $X$ の**構造係数** $\beta_X=2$ です。この式を構造的な生成過程として仮定するなら、$Z$ と $\varepsilon$ を一定に保って $X$ を1増やしたとき、$Y$ は2増えます。
 
@@ -93,6 +93,8 @@ $$
 $$
 
 です。
+
+ここで確認しているのは、$X$ と $u$ の**無相関**です。傾きの大標本での一致性を論じる今回の式ではこれで足りますが、一般には無相関だからといって、以前の記事で扱った条件付き平均ゼロ $E[u\mid X]=0$ が成り立つとは限りません。
 
 したがって、大標本では
 
@@ -588,9 +590,9 @@ $$
 
 ## 参考資料
 
-- 京都大学 環境マーケティング論分野「2SLS」  
-  https://www.eeso.ges.kyoto-u.ac.jp/emm/materials/econometrics/2sls
+- 京都大学「中級計量経済学・応用計量経済学 講義ノート2：線形回帰モデル」（OLSの一致性・欠落変数バイアス）  
+  https://www.nishiyama.kier.kyoto-u.ac.jp/2014/jugyochukei2.pdf
 - Jeffrey Greenbaum, *Economics 240B: Econometrics: Recitation Notes*（University of California, Berkeley）  
   https://www.ocf.berkeley.edu/~jeffreyg/240B.pdf
-- MIT OpenCourseWare, *Lecture 21: Endogeneity and Instrument Variables*  
-  https://ocw.mit.edu/courses/14-310x-data-analysis-for-social-scientists-spring-2023/resources/mit14_310x_s23_week10_lec21_pdf/
+- MIT OpenCourseWare, *Lecture 20: Omitted Variable Bias*  
+  https://ocw.mit.edu/courses/14-310x-data-analysis-for-social-scientists-spring-2023/resources/mit14_310x_s23_week09_lec20_pdf/
