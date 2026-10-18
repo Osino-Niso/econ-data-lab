@@ -227,34 +227,34 @@ $$
 
 **① まず切片を決める。** 傾き $b$ を固定し、$W=Y-bX$ と置くと、
 
-$
+$$
 E[(W-a)^2]
 =\operatorname{Var}(W)+(E[W]-a)^2
-$
+$$
 
 です。右辺の第2項が0になる $a=E[W]=E[Y]-bE[X]$ が、最適な切片です。
 
 **② 次に傾きを決める。** この切片を代入すると、最小化すべき値は
 
-$
+$$
 \begin{aligned}
 \operatorname{Var}(Y-bX)
 &=\operatorname{Var}(Y)-2b\operatorname{Cov}(X,Y)\\
 &\quad+b^2\operatorname{Var}(X)
 \end{aligned}
-$
+$$
 
 です。これを $b$ で微分して0と置くと、
 
-$
+$$
 -2\operatorname{Cov}(X,Y)+2b\operatorname{Var}(X)=0
-$
+$$
 
 なので、$\operatorname{Var}(X)>0$ のもとでは最小にする傾きが
 
-$
+$$
 b=\frac{\operatorname{Cov}(X,Y)}{\operatorname{Var}(X)}
-$
+$$
 
 と求まります。今回の $Y=1+2X+u$ に当てはめた値が、本文の約2.73です。
 
