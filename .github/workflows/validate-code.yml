@@ -72,6 +72,19 @@ jobs:
         run: |
           python code/election-age-aggregate/python.py | tee ci-output/election-age-aggregate-python.txt
 
+      - name: Validate VaR and ES ranking reversal (Python)
+        run: |
+          python code/var-es-risk-ranking/python.py
+          python code/var-es-risk-ranking/figures.py
+
+      - name: Save VaR and ES draft figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: var-es-risk-ranking-figures
+          path: |
+            images/var-es-risk-ranking-distributions.png
+            images/var-es-risk-ranking-tail.png
+
       - name: Save election age aggregation Python output
         uses: actions/upload-artifact@v4
         with:
@@ -184,6 +197,10 @@ jobs:
       - name: Run election age aggregation example
         run: |
           Rscript code/election-age-aggregate/r.R | tee ci-output/election-age-aggregate-r.txt
+
+      - name: Validate VaR and ES ranking reversal (R)
+        run: |
+          Rscript code/var-es-risk-ranking/r.R
 
       - name: Save election age aggregation R output
         uses: actions/upload-artifact@v4
