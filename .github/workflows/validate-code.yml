@@ -68,6 +68,16 @@ jobs:
         run: |
           python code/endogeneity-sample-size/python.py | tee ci-output/endogeneity-sample-size-python.txt
 
+      - name: Run election age aggregation example
+        run: |
+          python code/election-age-aggregate/python.py | tee ci-output/election-age-aggregate-python.txt
+
+      - name: Save election age aggregation Python output
+        uses: actions/upload-artifact@v4
+        with:
+          name: election-age-aggregate-python-output
+          path: ci-output/election-age-aggregate-python.txt
+
       - name: Save Python output
         uses: actions/upload-artifact@v4
         with:
@@ -170,6 +180,16 @@ jobs:
       - name: Run endogeneity sample-size example
         run: |
           Rscript code/endogeneity-sample-size/r.R | tee ci-output/endogeneity-sample-size-r.txt
+
+      - name: Run election age aggregation example
+        run: |
+          Rscript code/election-age-aggregate/r.R | tee ci-output/election-age-aggregate-r.txt
+
+      - name: Save election age aggregation R output
+        uses: actions/upload-artifact@v4
+        with:
+          name: election-age-aggregate-r-output
+          path: ci-output/election-age-aggregate-r.txt
 
       - name: Save R output
         uses: actions/upload-artifact@v4
