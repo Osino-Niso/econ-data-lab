@@ -5,7 +5,7 @@ distros <- function() {
     good <- -(p * x + q * middle) / r
     p * x^2 + q * middle^2 + r * good^2 - 100
   }
-  bad <- uniroot(quadratic, interval = c(-100, -10))$root
+  bad <- uniroot(quadratic, interval = c(-100, -10), tol = 1e-12)$root
   good <- -(p * bad + q * middle) / r
   list(
     A = list(ret = c(-10, 10), prob = c(0.5, 0.5)),
