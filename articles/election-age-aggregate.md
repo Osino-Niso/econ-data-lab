@@ -235,13 +235,13 @@ $$
 
 「若い年代で比較的高い投票割合」と「支持者のうち若い年代が何割か」は、逆向きの条件付き確率です。両者を結びつけるのが、年代別の投票者構成という重みです。
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
   A["2025年の年代別投票者構成"] --> C["2026年の有効票を年代別に仮配分"]
   B["10月9日のネット情勢調査：9%・7%"] --> D["各年代の仮の得票数を計算"]
   C --> D
   D --> E["49,377票との差から50歳以上の割合を逆算"]
-\`\`\`
+```
 
 *図：観測時点・母集団の異なる情報を、仮定を置いて結びつける計算の流れ。因果関係や実際の投票先を示す図ではありません。*
 
@@ -300,7 +300,7 @@ $$
 
 Pythonでは、必要な部分は次の式で書けます。
 
-\`\`\`python
+```python
 valid_2026 = 1398358
 actual = 49377
 voters_2025 = 1292363
@@ -319,11 +319,11 @@ print(round(young_votes), round(forties_votes))
 print(f"{required_older_rate * 100:.2f}%")
 # 26598 15188
 # 0.86%
-\`\`\`
+```
 
 Rでも同じ計算ができます。
 
-\`\`\`r
+```r
 valid_2026 <- 1398358
 actual <- 49377
 voters_2025 <- 1292363
@@ -340,7 +340,7 @@ required_older_rate <- (actual - young_votes - forties_votes) / older_valid
 
 cat(round(young_votes), round(forties_votes), "\n")
 cat(sprintf("%.2f%%\n", required_older_rate * 100))
-\`\`\`
+```
 
 感度分析と数値チェックまで実行できる完全版も用意しました。
 
