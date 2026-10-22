@@ -46,10 +46,10 @@ fig, ax = plt.subplots(figsize=(11.5, 4.7))
 ax.barh("Investment A", 5, color=BLUE, height=0.43)
 ax.barh("Investment B", 1, color=ORANGE, height=0.43)
 ax.barh("Investment B", 4, left=1, color=RED, height=0.43)
-ax.text(2.5, 0, "5% probability: 10% loss", ha="center", va="center",
+ax.text(2.5, 0, "5% probability: 8% loss", ha="center", va="center",
         color="white", fontsize=11, weight="bold")
 ax.text(0.5, 1, "1%", ha="center", va="center", fontsize=12, weight="bold")
-ax.text(3, 1, "4% probability: 47.93% loss", ha="center", va="center",
+ax.text(3, 1, "4% probability: 45.93% loss", ha="center", va="center",
         color="white", fontsize=11, weight="bold")
 ax.set_xlim(0, 5)
 ax.set_xlabel("Percentage points of the worst 5% outcomes")
@@ -60,9 +60,9 @@ ax.spines[["top", "right", "left"]].set_visible(False)
 ax.grid(axis="x", alpha=0.2)
 ax.set_axisbelow(True)
 fig.text(0.5, 0.04,
-         "A: VaR95 10%, ES95 10%     |     B: VaR95 5%, ES95 39.35%",
+         "A: VaR95 8%, ES95 8%     |     B: VaR95 3%, ES95 37.35%",
          ha="center", fontsize=13, weight="bold")
-fig.text(0.5, 0.11, "B orange segment (1%): 5% loss",
+fig.text(0.5, 0.11, "B orange segment (1%): 3% loss",
          ha="center", fontsize=10)
 fig.subplots_adjust(bottom=0.25, top=0.81, left=0.18, right=0.97)
 fig.savefig(OUT / "var-es-risk-ranking-tail.png",
