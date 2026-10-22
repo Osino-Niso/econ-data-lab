@@ -1,65 +1,76 @@
-"""Analytic example for VaR/ES ranking reversal. Returns and losses are in percent."""
+"""Reproduce the discrete return example used by the VaR/ES article.
+
+Returns, standard deviations, VaR and ES are expressed in percent (not fractions).
+Only NumPy is required.
+"""
 import numpy as np
 
-TAIL = 0.05
-TARGET_MEAN = 2.0  # shift in percentage points
+EXPECTED_RETURN = 2.0
+STANDARD_DEVIATION = 10.0
+CONFIDENCE = 0.95
 
 
 def distributions():
-    a = (np.array([-10.0, 10.0]) + TARGET_MEAN, np.array([0.5, 0.5]))
+    a = (np.array([-8.0, 12.0]), np.array([0.50, 0.50]))
     p, q, r = 0.04, 0.08, 0.88
-    middle = -5.0
-    # Let bad return x, good return z. First solve the centered mean-zero case with Var(R) = 100.
-    # z = -(p*x + q*middle)/r; solve variance as a quadratic in x.
+    # Work with excess returns relative to the targeted 2% mean.
+    middle_c = -5.0
     roots = np.roots([
         p + p**2 / r,
-        2 * p * q * middle / r,
-        q * middle**2 + (q * middle)**2 / r - 100.0,
+        2 * p * q * middle_c / r,
+        q * middle_c**2 + (q * middle_c)**2 / r - STANDARD_DEVIATION**2,
     ])
-    bad = float(min(roots))
-    good = -(p * bad + q * middle) / r
-    b = (np.array([bad, middle, good]) + TARGET_MEAN, np.array([p, q, r]))
+    bad_c = float(min(roots))
+    good_c = -(p * bad_c + q * middle_c) / r
+    b = (
+        np.array([bad_c, middle_c, good_c]) + EXPECTED_RETURN,
+        np.array([p, q, r]),
+    )
     return {"A": a, "B": b}
 
 
-def metrics(returns, probs, alpha=0.95):
-    assert np.isclose(probs.sum(), 1)
+def metrics(returns, probs, alpha=CONFIDENCE):
+    returns, probs = np.asarray(returns), np.asarray(probs)
+    assert len(returns) == len(probs)
+    assert all(probs >= 0) and np.isclose(probs.sum(), 1)
+    assert 0 < alpha < 1
     mean = float(np.dot(returns, probs))
-    sd = float(np.sqrt(np.dot(probs, (returns - mean) ** 2)))
+    sd = float(np.sqrt(np.dot(probs, (returns - mean)**2)))
     losses = -returns
-    asc = np.argsort(losses)
-    cdf = np.cumsum(probs[asc])
-    var = float(losses[asc][np.searchsorted(cdf, alpha, side="left")])
-    # Average the worst 1-alpha fraction. Trim atoms at the boundary.
-    remain = 1 - alpha
-    es_mass = 0.0
-    for idx in np.argsort(losses)[::-1]:
-        mass = min(float(probs[idx]), remain)
-        es_mass += mass * float(losses[idx])
-        remain -= mass
-        if remain < 1e-12:
+    order_asc = np.argsort(losses)
+    var = float(losses[order_asc][np.searchsorted(
+        np.cumsum(probs[order_asc]), alpha, side='left')])
+    mass_to_select = 1 - alpha
+    weighted_loss = 0.0
+    for ix in np.argsort(losses)[::-1]:
+        selected = min(float(probs[ix]), mass_to_select)
+        weighted_loss += selected * float(losses[ix])
+        mass_to_select -= selected
+        if mass_to_select < 1e-12:
             break
-    es = es_mass / (1 - alpha)
+    es = weighted_loss / (1 - alpha)
     return mean, sd, var, es
 
 
 def main():
-    print("Scenario   E[R]      SD       VaR95      ES95   (all %)")
-    values = {}
-    for name, (returns, probs) in distributions().items():
-        values[name] = metrics(returns, probs)
-        print(f"{name:>4}   " + "  ".join(f"{v:9.4f}" for v in values[name]))
-        print("        returns:", [round(v, 6) for v in returns])
-        print("        probs  :", probs.tolist())
-    a, b = values["A"], values["B"]
-    assert np.allclose(a[:2], [2.0, 10.0])
-    assert np.allclose(b[:2], [2.0, 10.0], atol=1e-10)
-    assert np.allclose(a[2:], [8.0, 8.0])
-    assert np.isclose(b[2], 3.0)
-    assert np.isclose(b[3], 37.34538341093389)
-    assert a[2] > b[2] and a[3] < b[3]
-    print("Checks passed: VaR and ES ranking reversal.")
+    result = {}
+    print('Scenario, mean, sd, VaR95, ES95 (all values in %)')
+    for label, (ret, prob) in distributions().items():
+        result[label] = metrics(ret, prob)
+        print(label, [round(x, 6) for x in result[label]])
+        print('return outcomes:', [round(float(x), 6) for x in ret])
+        print('probabilities:', prob.tolist())
+    assert np.allclose(result['A'], [2, 10, 8, 8], atol=1e-10)
+    assert np.allclose(result['B'], [2, 10, 3, 37.34538341093389], atol=1e-10)
+    assert result['A'][2] > result['B'][2] and result['A'][3] < result['B'][3]
+    # Translation invariance: shifting returns by +2 keeps SD and changes losses by -2.
+    for label, (ret, prob) in distributions().items():
+        zero_mean = metrics(ret - 2, prob)
+        positive_mean = metrics(ret, prob)
+        assert np.allclose(positive_mean, [zero_mean[0] + 2, zero_mean[1],
+                                           zero_mean[2] - 2, zero_mean[3] - 2])
+    print('All checks passed.')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
