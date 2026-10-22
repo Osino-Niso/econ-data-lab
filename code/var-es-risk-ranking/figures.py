@@ -1,71 +1,70 @@
-"""Draw reproducible figures for the VaR/ES article (PNG, Zenn-ready)."""
+"""Generate two reader-friendly Japanese figures for the VaR/ES draft.
+Run: python code/var-es-risk-ranking/figures.py from the repository root.
+"""
+import sys
 from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 import numpy as np
 
-from python import distributions, metrics
-
-OUT = Path(__file__).resolve().parents[2] / "images"
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parents[1]
+OUT=ROOT/'images'
 OUT.mkdir(exist_ok=True)
-D = distributions()
-BLUE = "#3176b5"
-ORANGE = "#e07a45"
-RED = "#bd423e"
+sys.path.insert(0,str(HERE))
+from python import distributions, metrics  # noqa: E402
 
-# Figure 1: discrete probability masses. The x positions are outcome
-# categories, NOT a continuous return scale.
-fig, ax = plt.subplots(1, 2, figsize=(11.5, 4.9), sharey=True)
-for a, (name, (returns, prob)) in zip(ax, D.items()):
-    bars = a.bar(np.arange(len(prob)), 100 * prob,
-                 color=BLUE if name == "A" else ORANGE, width=0.62)
-    a.set_xticks(np.arange(len(prob)))
-    a.set_xticklabels([f"{v:+.2f}%" for v in returns], fontsize=10)
-    a.set_title(f"Investment {name}", fontsize=16, weight="bold")
-    a.set_ylim(0, 105)
-    a.set_ylabel("Probability (%)")
-    a.set_xlabel("Return outcomes (categories)")
-    a.spines[["top", "right"]].set_visible(False)
-    for bar, p in zip(bars, prob):
-        a.text(bar.get_x() + bar.get_width()/2, bar.get_height()+2,
-               f"{p:.0%}", ha="center", fontsize=12, weight="bold")
-    mean, sd, *_ = metrics(returns, prob)
-    a.text(0.5, 0.96, f"Mean {mean:.0f}%   SD {sd:.0f}%",
-           transform=a.transAxes, ha="center", va="top", fontsize=11)
-fig.suptitle("Equal mean and SD, different probability distributions",
-             fontsize=16, weight="bold", y=1.03)
-fig.tight_layout()
-fig.savefig(OUT / "var-es-risk-ranking-distributions.png",
-            dpi=175, bbox_inches="tight")
+names=[p.name for p in font_manager.fontManager.ttflist]
+if 'Noto Sans CJK JP' in names:
+    plt.rcParams['font.family']='Noto Sans CJK JP'
+plt.rcParams['axes.unicode_minus']=False
+plt.rcParams['font.size']=11
+
+D=distributions()
+colors={'A':'#215d9c','B':'#bc5726'}
+fig, axes=plt.subplots(2,1,figsize=(10.9,7.8),sharex=True)
+for ax,(name,(r,p)) in zip(axes,D.items()):
+    x=r
+    height=p*100
+    ax.vlines(x,0,height,color=colors[name],linewidth=3,alpha=.9)
+    ax.scatter(x,height,s=110,color=colors[name],zorder=3)
+    for xi,yi in zip(x,height):
+        ax.annotate(f'{yi:.0f}%',(xi,yi),xytext=(0,8),textcoords='offset points',ha='center',fontsize=11,weight='bold')
+    mean,sd,*_=metrics(r,p)
+    ax.set_title(f'投資{name} ｜ 期待リターン {mean:.0f}% ・ 標準偏差 {sd:.0f}%',fontsize=14,loc='left',pad=15)
+    ax.set_ylim(0,108)
+    ax.set_ylabel('発生確率（%）')
+    ax.grid(axis='y',alpha=.16)
+    ax.spines[['right','top']].set_visible(False)
+    ax.set_yticks([0,25,50,75,100])
+    for xi,yi in zip(x,height):
+        ax.text(xi,30 if yi < 20 else 12,f'{xi:+.2f}%',ha='center',va='bottom',fontsize=10,color=colors[name])
+axes[-1].set_xlim(-52,18)
+axes[-1].set_xticks([-50,-40,-30,-20,-10,0,10])
+axes[-1].set_xlabel('一期間のリターン（%）',labelpad=11)
+fig.suptitle('平均と標準偏差が同じでも、分布の形は違う',fontsize=18,weight='bold',y=.995)
+fig.subplots_adjust(hspace=.48,left=.10,right=.97,top=.89,bottom=.10)
+fig.savefig(OUT/'var-es-risk-ranking-distributions.png',dpi=180)
 plt.close(fig)
 
-# Figure 2: represent exactly 5 percentage points of tail probability.
-# Bar lengths are probability mass, not loss magnitude.
-fig, ax = plt.subplots(figsize=(11.5, 4.7))
-ax.barh("Investment A", 5, color=BLUE, height=0.43)
-ax.barh("Investment B", 1, color=ORANGE, height=0.43)
-ax.barh("Investment B", 4, left=1, color=RED, height=0.43)
-ax.text(2.5, 0, "5% probability: 8% loss", ha="center", va="center",
-        color="white", fontsize=11, weight="bold")
-ax.text(0.5, 1, "1%", ha="center", va="center", fontsize=12, weight="bold")
-ax.text(3, 1, "4% probability: 45.93% loss", ha="center", va="center",
-        color="white", fontsize=11, weight="bold")
-ax.set_xlim(0, 5)
-ax.set_xlabel("Percentage points of the worst 5% outcomes")
+fig,ax=plt.subplots(figsize=(10.8,4.4))
+ax.barh('投資A',5,height=.46,color='#215d9c')
+ax.barh('投資B',1,height=.46,color='#e8a04c')
+ax.barh('投資B',4,left=1,height=.46,color='#bc4935')
 ax.invert_yaxis()
-ax.set_title("What is inside the worst 5% of losses?",
-             fontsize=17, weight="bold", pad=20)
-ax.spines[["top", "right", "left"]].set_visible(False)
-ax.grid(axis="x", alpha=0.2)
+ax.set_xlim(0,5)
+ax.set_xlabel('「最悪5%」に含める確率（パーセントポイント）')
+ax.set_title('最悪5%の内訳を比べる',loc='left',fontsize=18,weight='bold',pad=22)
+ax.text(2.5,0,'8%損失を5%分',ha='center',va='center',color='white',weight='bold',fontsize=12)
+ax.text(.5,1,'3%損失\n1%分',ha='center',va='center',color='#202020',fontsize=10)
+ax.text(3,1,'約45.93%損失を4%分',ha='center',va='center',color='white',weight='bold',fontsize=11)
+ax.grid(axis='x',alpha=.16)
 ax.set_axisbelow(True)
-fig.text(0.5, 0.04,
-         "A: VaR95 8%, ES95 8%     |     B: VaR95 3%, ES95 37.35%",
-         ha="center", fontsize=13, weight="bold")
-fig.text(0.5, 0.11, "B orange segment (1%): 3% loss",
-         ha="center", fontsize=10)
-fig.subplots_adjust(bottom=0.25, top=0.81, left=0.18, right=0.97)
-fig.savefig(OUT / "var-es-risk-ranking-tail.png",
-            dpi=175, bbox_inches="tight")
+ax.spines[['top','right','left']].set_visible(False)
+fig.text(.5,.085,'VaR（A 8% / B 3%）　　ES（A 8% / B 約37.35%）',ha='center',fontsize=12,weight='bold')
+fig.subplots_adjust(top=.76,bottom=.29,left=.13,right=.96)
+fig.savefig(OUT/'var-es-risk-ranking-tail.png',dpi=180)
 plt.close(fig)
-print("Generated figures in", OUT)
+print('Created two figures in',OUT)
