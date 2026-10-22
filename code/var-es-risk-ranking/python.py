@@ -2,13 +2,14 @@
 import numpy as np
 
 TAIL = 0.05
+TARGET_MEAN = 2.0  # shift in percentage points
 
 
 def distributions():
-    a = (np.array([-10.0, 10.0]), np.array([0.5, 0.5]))
+    a = (np.array([-10.0, 10.0]) + TARGET_MEAN, np.array([0.5, 0.5]))
     p, q, r = 0.04, 0.08, 0.88
     middle = -5.0
-    # Let bad return x, good return z. Impose E[R] = 0 and Var(R) = 100.
+    # Let bad return x, good return z. First solve the centered mean-zero case with Var(R) = 100.
     # z = -(p*x + q*middle)/r; solve variance as a quadratic in x.
     roots = np.roots([
         p + p**2 / r,
@@ -17,7 +18,7 @@ def distributions():
     ])
     bad = float(min(roots))
     good = -(p * bad + q * middle) / r
-    b = (np.array([bad, middle, good]), np.array([p, q, r]))
+    b = (np.array([bad, middle, good]) + TARGET_MEAN, np.array([p, q, r]))
     return {"A": a, "B": b}
 
 
@@ -51,11 +52,11 @@ def main():
         print("        returns:", [round(v, 6) for v in returns])
         print("        probs  :", probs.tolist())
     a, b = values["A"], values["B"]
-    assert np.allclose(a[:2], [0.0, 10.0])
-    assert np.allclose(b[:2], [0.0, 10.0], atol=1e-10)
-    assert np.allclose(a[2:], [10.0, 10.0])
-    assert np.isclose(b[2], 5.0)
-    assert np.isclose(b[3], 39.34538341093389)
+    assert np.allclose(a[:2], [2.0, 10.0])
+    assert np.allclose(b[:2], [2.0, 10.0], atol=1e-10)
+    assert np.allclose(a[2:], [8.0, 8.0])
+    assert np.isclose(b[2], 3.0)
+    assert np.isclose(b[3], 37.34538341093389)
     assert a[2] > b[2] and a[3] < b[3]
     print("Checks passed: VaR and ES ranking reversal.")
 
