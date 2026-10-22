@@ -3,7 +3,7 @@ title: "平均も標準偏差も同じなのに、リスク評価が逆転する
 emoji: "📉"
 type: "tech"
 topics: ["finance", "statistics", "python", "r"]
-published: false
+published: true
 ---
 
 「投資Aと投資B、どちらの方が危険ですか？」
@@ -343,7 +343,7 @@ ESでは、損失の大きい方から合計5%の確率質量を選びます。�
 
 今回は、同じ2つの分布に異なる物差しを当てるところから、その問いを考え始めました。
 
-## 再現コード（下書き）
+## 再現コード
 
 - [Python：分布・VaR・ESの検算](https://github.com/Osino-Niso/econ-data-lab/blob/main/code/var-es-risk-ranking/python.py)
 - [R：同じ指標の検算](https://github.com/Osino-Niso/econ-data-lab/blob/main/code/var-es-risk-ranking/r.R)
