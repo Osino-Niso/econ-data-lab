@@ -1,0 +1,33 @@
+name: Refresh reviewed VaR/ES article figures (temporary)
+on:
+  push:
+    branches:
+      - draft/var-es-zenn-ready-20261022
+    paths:
+      - .github/workflows/refresh-var-es-zenn-images-once.yml
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install plotting dependencies and Japanese fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install numpy matplotlib
+      - name: Regenerate figures with source code from this branch
+        run: python code/var-es-risk-ranking/figures.py
+      - name: Commit generated figures
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/var-es-risk-ranking-distributions.png images/var-es-risk-ranking-tail.png
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh Japanese VaR ES figures after twenty reviews"
+            git push origin HEAD:refs/heads/draft/var-es-zenn-ready-20261022
+          fi
