@@ -77,6 +77,9 @@ jobs:
           python code/var-es-risk-ranking/python.py
           python code/var-es-risk-ranking/figures.py
 
+      - name: Validate BOJ oil-shock CPI example (Python)
+        run: python code/oil-shocks-inflation-regimes/python.py
+
       - name: Save VaR and ES draft figures
         uses: actions/upload-artifact@v4
         with:
@@ -201,6 +204,9 @@ jobs:
       - name: Validate VaR and ES ranking reversal (R)
         run: |
           Rscript code/var-es-risk-ranking/r.R
+
+      - name: Validate BOJ oil-shock CPI example (R)
+        run: Rscript code/oil-shocks-inflation-regimes/r.R
 
       - name: Save election age aggregation R output
         uses: actions/upload-artifact@v4
