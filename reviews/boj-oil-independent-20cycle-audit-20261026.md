@@ -92,9 +92,10 @@ A＝出典表示があるので許諾・Zenn表示確認を不要とする（効
 
 ### GitHub / CI / 残余
 
-- 作業PR #37（Draft）：https://github.com/Osino-Niso/econ-data-lab/pull/37
+- 作業PR #37（Draftで作成し、readyへ変更後にsquash merge）：https://github.com/Osino-Niso/econ-data-lab/pull/37 。マージコミット f019bd91875fdb49f4c372a1afdca684be0415e6。
 - PR #37の本文最新コミット 85c6ea0085772d7905fea1d0dbe41533572d9002 に対する GitHub Actions Validate article code run 40266678507 は **Python・R・Interactive lab の全3ジョブ success**（2026-10-26時点）。
-- フロントマター published: false を対象記事本体で検査。現行見出し、5組の details、4点の画像、LaTeX 2ブロック、コードフェンスの構文的釣り合いを静的点検済み。
+- main反映後のGitHub Actions Validate article code run 40267164933 でも **Python・R・Interactive lab の3ジョブすべてsuccess**。https://github.com/Osino-Niso/econ-data-lab/actions/runs/40267164933
+- フロントマター published: false を main 上の対象記事本体で検査。現行見出し、5組の details、4点の画像、LaTeX 2ブロック、コードフェンスの構文的釣り合いを静的点検済み。
 - **未確認**：Zenn下書きのスマホ実表示、画像4点の読みやすさ・引用適法性、IMES『金融研究』版の本文全文照合。GitHub Actionsの成功をZennでの実表示や著作権適合の代用とはしない。
 - 本記事の読者価値は「原油高の因果効果を解明」ではなく、**出発点の単一数値で物価経路を順位づける直感に、4局面の原図を突き合わせて疑問を突きつけること**である。
 - **公開禁止：published: false を維持し、Zenn一般公開は行わない。**
