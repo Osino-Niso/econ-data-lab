@@ -53,3 +53,10 @@
 ## 編集上の判断
 
 今回の独自性は、4局面をきれいに表にすることではなく、講演の仮説がどの指標・研究で支持され、どの部分が因果的にはなお未確定かを、一つの具体例（単位労働コスト）で辿る点にある。原油高をめぐる計量的な新発見とは呼ばない。
+## GitHub実装・検証
+
+- Draft PR #39：https://github.com/Osino-Niso/econ-data-lab/pull/39 。PR上のValidate article code（run 40300042513）にてPython/R/Interactive labの3ジョブがすべて成功。
+- ready for reviewへ変更後にsquash merge：`c1959033f1c54499a24e5ab4209a21214cd43c6`。
+- main merge後のValidate article code（run 40300228487）：**Python・R・Interactive labの3ジョブすべてsuccess**。https://github.com/Osino-Niso/econ-data-lab/actions/runs/40300228487
+- merge後のmainで `articles/oil-shocks-inflation-regimes.md` の `published: false` と引用図表4点、改稿Q3を確認。
+- Zenn非公開下書きの実表示・スマホ幅・図引用の権利判断は引き続き未確認。CIの成功とは別の公開前確認事項。
