@@ -22,6 +22,17 @@ wage_by_year = {int(r["year"]): mean(float(r[q]) for q in ("q1_yoy","q2_yoy","q3
 cpi_by_year = {int(r["year"]): float(r["united_states"]) for r in inflation}
 years = sorted(wage_by_year)
 assert years == list(range(1972, 1984))
+# Compare pre-shock calendar years (not the immediate pre-shock quarters).
+pre_first_cpi, pre_second_cpi = cpi_by_year[1972], cpi_by_year[1978]
+pre_first_comp, pre_second_comp = wage_by_year[1972], wage_by_year[1978]
+assert abs(pre_first_cpi-3.27227824655282) < 1e-9
+assert abs(pre_second_cpi-7.63096383885605) < 1e-9
+assert abs(pre_first_comp-6.475) < 1e-9
+assert abs(pre_second_comp-8.55) < 1e-9
+assert pre_second_cpi > pre_first_cpi and pre_second_comp > pre_first_comp
+print(f"Pre-shock proxies: 1972 CPI {pre_first_cpi:.3f}% and compensation {pre_first_comp:.3f}%; "
+      f"1978 CPI {pre_second_cpi:.3f}% and compensation {pre_second_comp:.3f}%")
+
 assert abs(wage_by_year[1975] - 10.45) < 1e-9
 assert abs(wage_by_year[1980] - 10.725) < 1e-9
 for start,end in ((1973,1976),(1979,1982)):

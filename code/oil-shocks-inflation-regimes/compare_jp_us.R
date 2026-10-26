@@ -25,6 +25,18 @@ cols <- c("q1_yoy", "q2_yoy", "q3_yoy", "q4_yoy")
 w$annual <- rowMeans(w[cols])
 stopifnot(abs(w$annual[w$year == 1975] - 10.45) < 1e-10)
 stopifnot(abs(w$annual[w$year == 1980] - 10.725) < 1e-10)
+# Validate the same two pre-shock calendar-year proxies used in the article.
+cpi_1972 <- x$united_states[x$year == 1972]
+cpi_1978 <- x$united_states[x$year == 1978]
+comp_1972 <- w$annual[w$year == 1972]
+comp_1978 <- w$annual[w$year == 1978]
+stopifnot(abs(cpi_1972 - 3.27227824655282) < 1e-9,
+          abs(cpi_1978 - 7.63096383885605) < 1e-9,
+          abs(comp_1972 - 6.475) < 1e-9,
+          abs(comp_1978 - 8.55) < 1e-9,
+          cpi_1978 > cpi_1972, comp_1978 > comp_1972)
+cat(sprintf("Pre-shock US proxy: 1972 CPI %.3f%% comp %.3f%%; 1978 CPI %.3f%% comp %.3f%%\n",
+            cpi_1972, comp_1972, cpi_1978, comp_1978))
 first_mean <- mean(w$annual[w$year >= 1973 & w$year <= 1976])
 second_mean <- mean(w$annual[w$year >= 1979 & w$year <= 1982])
 first_accel <- w$annual[w$year == 1974] - w$annual[w$year == 1972]
