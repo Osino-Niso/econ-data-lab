@@ -42,3 +42,9 @@
 - `published: false` 維持。一般公開操作なし。
 - 原文・研究の要約内容とZenn Markdownの静的検査を実施。引用図表の著作権条件、Zenn実表示・スマホでの視認性は未確認として扱う。
 - このPRのPython/R/Interactive lab CI結果を確認後、非公開のままmainへ反映する。
+## GitHubへの反映・確認（2026-10-26）
+
+- PR #38（https://github.com/Osino-Niso/econ-data-lab/pull/38）をDraftで作成し、PR上のPython・R・Interactive lab 3ジョブ成功後にreadyへ移行してsquash merge。merge commit：89282579ed0f85eca521a5f383df124b9a4b8a1d。
+- main上で articles/oil-shocks-inflation-regimes.md の published: false、追加研究章、応用型Q3、元図4点の参照を確認。
+- マージ後のGitHub Actions Validate article code run 40270411957（https://github.com/Osino-Niso/econ-data-lab/actions/runs/40270411957）：Python・R・Interactive lab の3ジョブすべてsuccess。
+- 静的確認は画像実表示・著作権の適否を保証しない。Zenn下書きの実表示と引用条件は未確認。
