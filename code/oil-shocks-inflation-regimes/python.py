@@ -1,35 +1,46 @@
-"""Reproduce the illustrative price-level examples in the BOJ oil-shock explainer.
+"""Reproduce descriptive historical comparisons; NOT causal shock identification.
 
-These paths are hypothetical. They are not Japanese CPI observations and not
-forecasts implied by an oil-price model.
+Raw data were manually transcribed; see README.md for series IDs and source URLs.
+No network access or extra packages are needed.
 """
-PATHS = {
-    "A_one_step": [100.0, 104.0, 104.0, 104.0],
-    "B_delayed": [100.0, 102.0, 104.0, 104.0],
-    "C_persistent": [100.0, 104.0, 108.16, 112.4864],
-}
+import csv
+from collections import defaultdict
+from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent
 
-def inflation_rates(price_index):
-    """Period-over-period percentage changes of a positive price index."""
-    assert all(p > 0 for p in price_index)
-    return [
-        100.0 * (price_index[t] / price_index[t - 1] - 1.0)
-        for t in range(1, len(price_index))
-    ]
-
+def change(new, old):
+    return 100 * (float(new) / float(old) - 1)
 
 def main():
-    out = {name: inflation_rates(path) for name, path in PATHS.items()}
-    for name, rates in out.items():
-        print(name, ", ".join(f"{x:.4f}%" for x in rates))
-    assert all(abs(a - b) < 1e-10 for a, b in zip(out["A_one_step"], [4, 0, 0]))
-    assert all(abs(a - b) < 1e-10 for a, b in zip(
-        out["B_delayed"], [2, 100 * (104 / 102 - 1), 0]
-    ))
-    assert all(abs(a - b) < 1e-10 for a, b in zip(out["C_persistent"], [4, 4, 4]))
-    print("All illustrative inflation calculations passed.")
-
+    with (ROOT / "historical-japan-1972-1981.csv").open(encoding="utf-8", newline="") as f:
+        year = {int(r["year"]): r for r in csv.DictReader(f)}
+    with (ROOT / "opec-landed-us-1978-1980.csv").open(encoding="utf-8", newline="") as f:
+        prices = defaultdict(list)
+        for r in csv.DictReader(f):
+            prices[int(r["year"])].append(float(r["us_landed_opec_cost_usd_per_bbl"]))
+    assert list(year) == list(range(1972, 1982))
+    assert all(len(v) == 12 for v in prices.values())
+    means = {y: sum(v)/len(v) for y,v in prices.items()}
+    print("Year | Japan CPI yoy (%) | Manufacturing ULC yoy (%) | Manufacturing output price yoy (%)")
+    for y in range(1973, 1982):
+        cpi = change(year[y]["japan_cpi_index_2015_100"],
+                     year[y-1]["japan_cpi_index_2015_100"])
+        r=year[y]
+        print(f'{y} | {cpi:.2f} | {r["japan_manufacturing_ulc_yoy_pct"] or "NA"} | {r["japan_manufacturing_output_price_yoy_pct"] or "NA"}')
+    supply_73_74 = change(year[1974]["world_oil_supply_thousand_bpd"], year[1973]["world_oil_supply_thousand_bpd"])
+    supply_78_79 = change(year[1979]["world_oil_supply_thousand_bpd"], year[1978]["world_oil_supply_thousand_bpd"])
+    landed_78_79 = change(means[1979], means[1978])
+    print(f"World oil supply 1973-74: {supply_73_74:.2f}%, 1978-79: {supply_78_79:.2f}%")
+    print(f"U.S. landed OPEC crude 1978: {means[1978]:.3f}, 1979: {means[1979]:.3f} USD/bbl, change: {landed_78_79:.2f}%")
+    assert abs(supply_73_74 - 0.1534569983) < 1e-7
+    assert abs(supply_78_79 - 4.2787076684) < 1e-7
+    assert abs(landed_78_79 - 48.8750654032) < 1e-7
+    assert abs(change(year[1974]["japan_cpi_index_2015_100"], year[1973]["japan_cpi_index_2015_100"]) - 23.0965113318) < 1e-7
+    assert abs(change(year[1979]["japan_cpi_index_2015_100"], year[1978]["japan_cpi_index_2015_100"]) - 3.7531902117) < 1e-7
+    assert year[1974]["japan_manufacturing_ulc_yoy_pct"] == "30"
+    assert year[1979]["japan_manufacturing_ulc_yoy_pct"] == "-3"
+    print("Checks passed. These are descriptive comparisons, not causal estimates.")
 
 if __name__ == "__main__":
     main()
