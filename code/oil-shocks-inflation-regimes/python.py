@@ -4,6 +4,7 @@ Raw data were manually transcribed; see README.md for series IDs and source URLs
 No network access or extra packages are needed.
 """
 import csv
+import re
 from collections import defaultdict
 from pathlib import Path
 
@@ -47,6 +48,29 @@ def main():
     assert abs(oecd_ulc[1980] - 4.71712159349492) < 1e-8
     assert year[1974]["japan_manufacturing_ulc_yoy_pct"] == "30"
     assert year[1979]["japan_manufacturing_ulc_yoy_pct"] == "-3"
+    # CI: the two line series in the Zenn Mermaid figure must match the CSV.
+    # This prevents editorial changes from quietly leaving the plot out of date.
+    article = (ROOT.parent.parent / "articles" / "oil-shocks-inflation-regimes.md").read_text(encoding="utf-8")
+    assert "published: false" in article and "published: true" not in article
+    assert article.count("xychart-beta") == 1
+    diagram = article.split("xychart-beta", 1)[1].split("```", 1)[0]
+    plotted = re.findall(r"^\\s*line\\s*\\[([^]]+)\\]", diagram, flags=re.MULTILINE)
+    assert len(plotted) == 2, "Expect exactly two Mermaid line series"
+    parsed = [[float(v.strip()) for v in vals.split(",")] for vals in plotted]
+    actual_years = list(range(1973, 1982))
+    expected = [
+        [oecd_ulc[y] for y in actual_years],
+        [change(year[y]["japan_cpi_index_2015_100"],
+                year[y-1]["japan_cpi_index_2015_100"]) for y in actual_years],
+    ]
+    for series, expected_series in zip(parsed, expected):
+        assert len(series) == len(expected_series)
+        assert all(abs(observed - reference) <= 0.0051
+                   for observed, reference in zip(series, expected_series)), (
+            "Mermaid series disagrees with source CSV rounded to 2 decimals"
+        )
+    assert "x-axis [1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981]" in diagram
+    print("Zenn Mermaid plot matches historical ULC/CPI data.")
     print("Checks passed. These are descriptive comparisons, not causal estimates.")
 
 if __name__ == "__main__":
