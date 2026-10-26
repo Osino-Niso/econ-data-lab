@@ -83,6 +83,9 @@ jobs:
       - name: Validate cross-country historical inflation graph
         run: python code/oil-shocks-inflation-regimes/plot_jp_us.py
 
+      - name: Validate US wage / CPI comparison graph
+        run: python code/oil-shocks-inflation-regimes/plot_usa_wage_cpi.py
+
       - name: Save VaR and ES draft figures
         uses: actions/upload-artifact@v4
         with:
