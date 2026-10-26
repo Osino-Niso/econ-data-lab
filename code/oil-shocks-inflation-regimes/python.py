@@ -54,7 +54,7 @@ def main():
     assert "published: false" in article and "published: true" not in article
     assert article.count("xychart-beta") == 1
     diagram = article.split("xychart-beta", 1)[1].split("```", 1)[0]
-    plotted = re.findall(r"^\\s*line\\s*\\[([^]]+)\\]", diagram, flags=re.MULTILINE)
+    plotted = re.findall(r"^\s*line\s*\[([^]]+)\]", diagram, flags=re.MULTILINE)
     assert len(plotted) == 2, "Expect exactly two Mermaid line series"
     parsed = [[float(v.strip()) for v in vals.split(",")] for vals in plotted]
     actual_years = list(range(1973, 1982))
