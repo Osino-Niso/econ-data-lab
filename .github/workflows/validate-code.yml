@@ -80,6 +80,9 @@ jobs:
       - name: Validate BOJ oil-shock CPI example (Python)
         run: python code/oil-shocks-inflation-regimes/python.py
 
+      - name: Validate cross-country historical inflation graph
+        run: python code/oil-shocks-inflation-regimes/plot_jp_us.py
+
       - name: Save VaR and ES draft figures
         uses: actions/upload-artifact@v4
         with:
@@ -207,6 +210,9 @@ jobs:
 
       - name: Validate BOJ oil-shock CPI example (R)
         run: Rscript code/oil-shocks-inflation-regimes/r.R
+
+      - name: Validate cross-country historical inflation averages (R)
+        run: Rscript code/oil-shocks-inflation-regimes/compare_jp_us.R
 
       - name: Save election age aggregation R output
         uses: actions/upload-artifact@v4
