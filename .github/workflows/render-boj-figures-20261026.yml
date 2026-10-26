@@ -1,0 +1,42 @@
+name: Render BOJ source quotes and US wages draft
+
+on:
+  push:
+    branches:
+      - draft/boj-oil-spiral-crosscountry-figures-20261026
+    paths:
+      - "code/oil-shocks-inflation-regimes/render_ueda_original_quotes.py"
+      - "code/oil-shocks-inflation-regimes/plot_usa_wage_cpi.py"
+      - "code/oil-shocks-inflation-regimes/usa_hourly_compensation_1972_1983.csv"
+      - ".github/workflows/render-boj-figures-20261026.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Japanese font and dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          python -m pip install --upgrade matplotlib pillow pymupdf
+      - name: Quote original BOJ charts 2–5 faithfully
+        run: python code/oil-shocks-inflation-regimes/render_ueda_original_quotes.py
+      - name: Render US wage CPI comparison
+        run: python code/oil-shocks-inflation-regimes/plot_usa_wage_cpi.py
+      - name: Commit images to draft (not published)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/boj-ueda-2026-chart-*-quoted.webp images/boj-us-wage-cpi-1972-1983.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Render quoted BOJ charts and US wages graph"
+            git push
+          fi
