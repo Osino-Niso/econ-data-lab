@@ -12,7 +12,7 @@ cpi_yoy <- pct(japan$japan_cpi_index_2015_100[-1],
                japan$japan_cpi_index_2015_100[-nrow(japan)])
 print(data.frame(year = japan$year[-1],
                  cpi_yoy_pct = round(cpi_yoy, 4),
-                 manuf_ulc_2014_vintage_yoy_pct = round(oecd_ulc$japan_manufacturing_ulc_oecd_benchmarked_yoy_pct[-1],4),
+                 manuf_ulc_2014_vintage_yoy_pct = round(oecd_ulc$japan_manufacturing_ulc_oecd_benchmarked_yoy_pct[-c(1,2)],4),
                  manuf_ulc_1981_vintage_yoy_pct = japan$japan_manufacturing_ulc_yoy_pct[-1]))
 prices <- aggregate(us_landed_opec_cost_usd_per_bbl ~ year,
                     data = landed, FUN = mean)
