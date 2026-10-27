@@ -48,5 +48,26 @@ print(f"OLS slope A = {coef_a[1]:.6f}, OLS slope B = {coef_b[1]:.6f}")
 print("Structural response to +1pt imposed wage innovation:")
 print("Economy A: +0.75pt next-period inflation deviation")
 print("Economy B: +0.00pt next-period inflation deviation")
-assert 0.75 * 1.0 == 0.75
-assert 0.0 * 1.0 == 0.0
+# Controlled one-time intervention: overwrite wage[0] by +1 pp, without
+# changing the price innovation path or subsequent structural equations.
+H = 9
+response_a = np.zeros(H)
+response_b = np.zeros(H)
+wage_response_a = np.zeros(H)
+wage_response_b = np.zeros(H)
+latent_response_b = np.zeros(H)
+wage_response_a[0] = 1.0
+wage_response_b[0] = 1.0
+for t in range(1, H):
+    response_a[t] = 0.75 * wage_response_a[t - 1]
+    wage_response_a[t] = 0.8 * response_a[t]
+    latent_response_b[t] = 0.6 * latent_response_b[t - 1]
+    response_b[t] = latent_response_b[t]
+    wage_response_b[t] = 0.8 * response_b[t]
+expected_response_a = np.array([0.0] + [0.75 * 0.6**(t-1) for t in range(1, H)])
+assert np.allclose(response_a, expected_response_a, atol=1e-12)
+assert np.allclose(response_b, 0, atol=1e-12)
+assert abs(response_a[1] - 0.75) < 1e-12
+assert abs(response_a[2] - 0.45) < 1e-12
+print("Controlled wage intervention, price response A:", np.round(response_a[:5], 6))
+print("Controlled wage intervention, price response B:", np.round(response_b[:5], 6))
