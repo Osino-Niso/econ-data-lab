@@ -138,7 +138,9 @@ $$
 | 1980 | +4.72％ | +7.80％ |
 | 1981 | +2.85％ | +4.90％ |
 
-*ULCは[FRED収録のOECD系列JPNULCMANAPNMEI](https://fred.stlouisfed.org/data/JPNULCMANAPNMEI)、CPIは[OECD全国総合の年平均指数](https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&vw=tb)から計算。製造業と家計の対象範囲が異なり、講演の「食料・エネルギー除くCPI」とも別の系列です。*
+*OECD Data Explorerで「The space is invalid.」などのエラーが出る場合は、[同じ公表時点の固定CSV](https://github.com/Osino-Niso/econ-data-lab/blob/research/oil-shock-data-pilot-20261026/code/oil-shocks-inflation-regimes/historical-japan-1972-1981.csv)の `japan_cpi_index_2015_100` 列から1972～1981年の値を確認できます。CSVは記事の再現用スナップショットであり、OECDのリアルタイム更新値ではありません。*
+
+*ULCは[FRED収録のOECD系列JPNULCMANAPNMEI](https://fred.stlouisfed.org/data/JPNULCMANAPNMEI)、CPIは[OECD全国総合の年平均指数](https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bds%5D=dsDisseminateFinalDMZ&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&df%5Bvs%5D=1.0&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&pg=0&snb=31&tm=consumer+price+index&to%5BTIME_PERIOD%5D=false&vw=tb)から計算。製造業と家計の対象範囲が異なり、講演の「食料・エネルギー除くCPI」とも別の系列です。*
 
 ```mermaid
 xychart-beta
@@ -322,7 +324,7 @@ ULCの歴史系列には改訂・定義差があります。1990年の英国議�
 
 - 植田和男（2026）[「日本における原油価格ショック、物価上昇率と金融政策」2026年5月27日開会挨拶](https://www.boj.or.jp/about/press/koen_2026/ko260527a.htm)（[図表付きPDF](https://www.boj.or.jp/about/press/koen_2026/data/ko260527a1.pdf)）。『金融研究』45巻4号の[掲載情報](https://www.boj.or.jp/research/imes/mes/mes26.htm)。
 - 日本銀行（2026）[『経済・物価情勢の展望』2026年4月号、BOX2「原油価格高騰がわが国物価に与える影響」](https://www.boj.or.jp/mopo/outlook/gor2604b.pdf)。
-- OECD/FRED [日本の製造業ULC・JPNULCMANAPNMEI](https://fred.stlouisfed.org/data/JPNULCMANAPNMEI)、OECD [日本の全国総合CPI](https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&vw=tb)。
+- OECD/FRED [日本の製造業ULC・JPNULCMANAPNMEI](https://fred.stlouisfed.org/data/JPNULCMANAPNMEI)、OECD [日本の全国総合CPI](https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bds%5D=dsDisseminateFinalDMZ&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&df%5Bvs%5D=1.0&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&pg=0&snb=31&tm=consumer+price+index&to%5BTIME_PERIOD%5D=false&vw=tb)。
 - [ULCとCPIの固定CSV、Python/R再現コード、データの出典と留意点](https://github.com/Osino-Niso/econ-data-lab/tree/research/oil-shock-data-pilot-20261026/code/oil-shocks-inflation-regimes)。
 
 *本文の歴史系列は特定公表時点の固定データを用いています。図表2～5は日銀講演資料の引用です。*
