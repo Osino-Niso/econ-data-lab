@@ -70,7 +70,24 @@ def main():
             "Mermaid series disagrees with source CSV rounded to 2 decimals"
         )
     assert "x-axis [1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981]" in diagram
-    print("Zenn Mermaid plot matches historical ULC/CPI data.")
+    # CI also checks every row of the reader-facing Markdown table, not just the plot.
+    rows = re.findall(
+        r"^\\|\\s*(19(?:7[3-9]|8[01]))\\s*\\|\\s*([+−-]?\\d+\\.\\d+)％\\s*\\|\\s*([+−-]?\\d+\\.\\d+)％\\s*\\|\\s*$",
+        article, flags=re.MULTILINE,
+    )
+    assert [int(row[0]) for row in rows] == actual_years, (
+        "Expected the complete 1973–1981 ULC/CPI Markdown table"
+    )
+    def signed_percent(raw):
+        return float(raw.replace("−", "-"))
+    for (y, table_ulc, table_cpi), ref_ulc, ref_cpi in zip(rows, *expected):
+        assert abs(signed_percent(table_ulc) - ref_ulc) <= 0.0051, (
+            f"ULC table for {y} disagrees with fixed CSV"
+        )
+        assert abs(signed_percent(table_cpi) - ref_cpi) <= 0.0051, (
+            f"CPI table for {y} disagrees with fixed CSV"
+        )
+    print("Zenn Markdown ULC/CPI table and Mermaid plot match source CSV.")
     print("Checks passed. These are descriptive comparisons, not causal estimates.")
 
 if __name__ == "__main__":
