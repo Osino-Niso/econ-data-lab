@@ -59,7 +59,11 @@ def main():
     assert "| 年 | 製造業ULC前年比" not in article
     assert "Q-JEM" not in article
     assert article.count(":::details 解答と理由") == 3, "Expect three independent learning checks"
-    assert article.count(":::details") == 3
+    assert article.count(":::details 説明例と確認ポイント") == 1, "Expect an optional 100-character mastery challenge"
+    assert article.count(":::details") == 4, "Expect three exercises plus one foldable self-check"
+    assert article.count("### Q1：110円のままなら、値上がり率はどうなる？") == 1
+    assert article.count("### Q3：2000年代半ばと2021年以降、何が違った？") == 1
+    assert "T−1" in article and "T＋1" in article and "右側の目盛り" in article
     assert all(
         f"/images/boj-ueda-2026-chart-{n}-quoted.webp" in article
         for n in range(2, 6)
@@ -67,7 +71,7 @@ def main():
     assert "原油高で輸入費用が上昇" in article and "次の価格改定" in article
     assert all(f"**{y}" in article for y in ("1973年", "1979年"))
     assert "2000年代半ば" in article and "2021年以降" in article
-    print("Intro Zenn article: flow diagram, 4 lecture charts and 3 questions validated.")
+    print("Intro Zenn article: diagram, 4 charts, 3 questions and a mastery challenge validated.")
     print("Checks passed. These are descriptive comparisons, not causal estimates.")
 
 if __name__ == "__main__":
