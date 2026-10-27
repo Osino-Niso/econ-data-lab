@@ -3,7 +3,7 @@ title: "原油高が起きても、なぜ賃金・物価スパイラルになる
 emoji: "🛢️"
 type: "tech"
 topics: ["economics", "macroeconomics", "statistics", "inflation"]
-published: false
+published: true
 ---
 
 1974年の日本では、物価と名目賃金の上昇率がともに20～30％に達しました。ところが、1979年に始まる第2次石油ショックでは、原油高が起きても、第1次ほど激しい賃金・物価の連鎖にはなりませんでした。
