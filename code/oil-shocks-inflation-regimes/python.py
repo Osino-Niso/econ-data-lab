@@ -48,55 +48,26 @@ def main():
     assert abs(oecd_ulc[1980] - 4.71712159349492) < 1e-8
     assert year[1974]["japan_manufacturing_ulc_yoy_pct"] == "30"
     assert year[1979]["japan_manufacturing_ulc_yoy_pct"] == "-3"
-    # CI: the two line series in the Zenn Mermaid figure must match the CSV.
-    # This prevents editorial changes from quietly leaving the plot out of date.
+    # The reader-facing article is now an introductory explanation. Technical
+    # ULC/CPI year tables and Q-JEM are reserved for the later advanced article.
+    # Keep verifying the historical data above for future reuse, but do not
+    # require a chart or numerical table that is no longer in the intro.
     article = (ROOT.parent.parent / "articles" / "oil-shocks-inflation-regimes.md").read_text(encoding="utf-8")
     assert "published: false" in article and "published: true" not in article
-    assert article.count("xychart-beta") == 1
-    diagram = article.split("xychart-beta", 1)[1].split("```", 1)[0]
-    # Two different plot types identify series without relying on new Mermaid
-    # legend syntax: bars=manufacturing ULC, line=all-items CPI.
-    bars = re.findall(r"^\s*bar\s*\[([^]]+)\]", diagram, flags=re.MULTILINE)
-    lines = re.findall(r"^\s*line\s*\[([^]]+)\]", diagram, flags=re.MULTILINE)
-    assert len(bars) == 1 and len(lines) == 1, (
-        "Expect one ULC bar series and one CPI line series"
-    )
-    parsed = [[float(v.strip()) for v in vals.split(",")] for vals in (bars[0], lines[0])]
-    actual_years = list(range(1973, 1982))
-    expected = [
-        [oecd_ulc[y] for y in actual_years],
-        [change(year[y]["japan_cpi_index_2015_100"],
-                year[y-1]["japan_cpi_index_2015_100"]) for y in actual_years],
-    ]
-    for series, expected_series in zip(parsed, expected):
-        assert len(series) == len(expected_series)
-        assert all(abs(observed - reference) <= 0.0051
-                   for observed, reference in zip(series, expected_series)), (
-            "Mermaid series disagrees with source CSV rounded to 2 decimals"
-        )
-    assert "x-axis [1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981]" in diagram
-    # CI also checks every row of the reader-facing Markdown table, not just the plot.
-    rows = []
-    expected_year_labels = {str(y) for y in actual_years}
-    for line in article.splitlines():
-        cells = [cell.strip() for cell in line.strip().split("|")]
-        if len(cells) == 5 and cells[1] in expected_year_labels:
-            rows.append((
-                int(cells[1]),
-                float(cells[2].removesuffix("％").replace("−", "-")),
-                float(cells[3].removesuffix("％").replace("−", "-")),
-            ))
-    assert [year for year, _, _ in rows] == actual_years, (
-        "Expected the complete 1973–1981 ULC/CPI Markdown table"
-    )
-    for (y, table_ulc, table_cpi), ref_ulc, ref_cpi in zip(rows, *expected):
-        assert abs(table_ulc - ref_ulc) <= 0.0051, (
-            f"ULC table for {y} disagrees with fixed CSV"
-        )
-        assert abs(table_cpi - ref_cpi) <= 0.0051, (
-            f"CPI table for {y} disagrees with fixed CSV"
-        )
-    print("Zenn Markdown ULC/CPI table and Mermaid plot match source CSV.")
+    assert article.count("flowchart TD") == 1, "Expect exactly one educational feedback-flow diagram"
+    assert "xychart-beta" not in article, "Technical ULC/CPI chart belongs in the advanced article"
+    assert "| 年 | 製造業ULC前年比" not in article
+    assert "Q-JEM" not in article
+    assert article.count(":::details 解答と理由") == 3, "Expect three independent learning checks"
+    assert article.count(":::details") == 3
+    assert all(
+        f"/images/boj-ueda-2026-chart-{n}-quoted.webp" in article
+        for n in range(2, 6)
+    ), "All four BOJ lecture charts should remain in the introduction"
+    assert "原油高で輸入費用が上昇" in article and "次の価格改定" in article
+    assert all(f"**{y}" in article for y in ("1973年", "1979年"))
+    assert "2000年代半ば" in article and "2021年以降" in article
+    print("Intro Zenn article: flow diagram, 4 lecture charts and 3 questions validated.")
     print("Checks passed. These are descriptive comparisons, not causal estimates.")
 
 if __name__ == "__main__":
