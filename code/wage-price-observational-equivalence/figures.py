@@ -4,15 +4,25 @@ All series and interventions are synthetic. The font comes from the CI runner's
 system package (fonts-noto-cjk); the repository contains no font files.
 """
 from pathlib import Path
+import subprocess
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 from matplotlib import pyplot as plt
+from matplotlib import font_manager
 from matplotlib.font_manager import findfont, FontProperties
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "images"
 OUT.mkdir(parents=True, exist_ok=True)
+# The Python CI job may have cached Matplotlib fonts *before* apt installed
+# fonts-noto-cjk. Register the font explicitly to avoid a stale cache.
+font_path = subprocess.check_output(
+    ["fc-match", "-f", "%{file}", "Noto Sans CJK JP"], text=True
+).strip()
+if "NotoSansCJK" not in font_path:
+    raise RuntimeError(f"Noto CJK font unavailable: {font_path}")
+font_manager.fontManager.addfont(font_path)
 findfont(FontProperties(family="Noto Sans CJK JP"), fallback_to_default=False)
 plt.rcParams.update({
     "font.family": "Noto Sans CJK JP", "font.size": 16,
