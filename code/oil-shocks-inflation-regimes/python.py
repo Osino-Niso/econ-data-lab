@@ -53,7 +53,7 @@ def main():
     # Keep verifying the historical data above for future reuse, but do not
     # require a chart or numerical table that is no longer in the intro.
     article = (ROOT.parent.parent / "articles" / "oil-shocks-inflation-regimes.md").read_text(encoding="utf-8")
-    assert "published: false" in article and "published: true" not in article
+    assert article.count("published: false") + article.count("published: true") == 1, "Exactly one publication status is required"
     assert article.count("flowchart TD") == 1, "Expect exactly one educational feedback-flow diagram"
     assert "xychart-beta" not in article, "Technical ULC/CPI chart belongs in the advanced article"
     assert "| 年 | 製造業ULC前年比" not in article
