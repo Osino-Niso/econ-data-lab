@@ -63,6 +63,11 @@ def main():
     assert article.count(":::details") == 4, "Expect three exercises plus one foldable self-check"
     assert article.count("### Q1：110円のままなら、値上がり率はどうなる？") == 1
     assert article.count("### Q3：2000年代半ばと2021年以降、何が違った？") == 1
+    assert "### 仕上げ：この記事の疑問を100～150字程度で説明してみよう" in article
+    assert "なぜ原油高の図なのに「食料・エネルギーを除くCPI」を見るのでしょうか" in article
+    assert "それ以外の商品やサービスの価格にまで上昇が広がっているか" in article
+    assert "年号や数値の暗記は不要です" in article
+    assert "その時期のどんな条件が連鎖の強さに関係したのか" in article
     assert "T−1" in article and "T＋1" in article and "右側の目盛り" in article
     assert all(
         f"/images/boj-ueda-2026-chart-{n}-quoted.webp" in article
