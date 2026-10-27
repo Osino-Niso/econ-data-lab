@@ -83,6 +83,9 @@ jobs:
       - name: Validate observational equivalence article (Python)
         run: python code/wage-price-observational-equivalence/python.py
 
+      - name: Install Japanese fonts for figures
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk
+
       - name: Generate observational equivalence figures (Python)
         run: python code/wage-price-observational-equivalence/figures.py
 
@@ -309,6 +312,8 @@ jobs:
           python-version: "3.12"
       - name: Install matplotlib
         run: python -m pip install numpy matplotlib
+      - name: Install Japanese fonts for figures
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk
       - name: Render two reproducible PNG files
         run: python code/wage-price-observational-equivalence/figures.py
       - name: Commit figures if changed
