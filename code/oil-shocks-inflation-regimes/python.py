@@ -54,13 +54,14 @@ def main():
     assert "published: false" in article and "published: true" not in article
     assert article.count("xychart-beta") == 1
     diagram = article.split("xychart-beta", 1)[1].split("```", 1)[0]
-    # A named series requires Mermaid 11.17+ for the legend. In addition to
-    # numeric agreement, check the labels so the two lines are identifiable.
-    plotted = re.findall(r'^\s*line\s+"([^"]+)"\s*\[([^]]+)\]', diagram, flags=re.MULTILINE)
-    assert [name for name, _ in plotted] == ["Manufacturing ULC", "All-items CPI"], (
-        "Expect two clearly named Mermaid lines in ULC, CPI order"
+    # Two different plot types identify series without relying on new Mermaid
+    # legend syntax: bars=manufacturing ULC, line=all-items CPI.
+    bars = re.findall(r"^\s*bar\s*\[([^]]+)\]", diagram, flags=re.MULTILINE)
+    lines = re.findall(r"^\s*line\s*\[([^]]+)\]", diagram, flags=re.MULTILINE)
+    assert len(bars) == 1 and len(lines) == 1, (
+        "Expect one ULC bar series and one CPI line series"
     )
-    parsed = [[float(v.strip()) for v in vals.split(",")] for _, vals in plotted]
+    parsed = [[float(v.strip()) for v in vals.split(",")] for vals in (bars[0], lines[0])]
     actual_years = list(range(1973, 1982))
     expected = [
         [oecd_ulc[y] for y in actual_years],
