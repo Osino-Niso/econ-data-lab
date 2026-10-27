@@ -80,6 +80,9 @@ jobs:
       - name: Validate BOJ oil-shock CPI example (Python)
         run: python code/oil-shocks-inflation-regimes/python.py
 
+      - name: Validate observational equivalence article (Python)
+        run: python code/wage-price-observational-equivalence/python.py
+
       - name: Save VaR and ES draft figures
         uses: actions/upload-artifact@v4
         with:
@@ -207,6 +210,9 @@ jobs:
 
       - name: Validate BOJ oil-shock CPI example (R)
         run: Rscript code/oil-shocks-inflation-regimes/r.R
+
+      - name: Validate observational equivalence article (R)
+        run: Rscript code/wage-price-observational-equivalence/r.R
 
       - name: Save election age aggregation R output
         uses: actions/upload-artifact@v4
