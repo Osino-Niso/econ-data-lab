@@ -6,11 +6,15 @@
 
 | CSV列 | 観測対象／単位 | 出典・抽出方法 |
 | --- | --- | --- |
-| `japan_cpi_index_2015_100` | 日本、年平均の全国CPI（総合）、2015年=100の指数 | OECD Data Explorer, `JPN.A.N.CPI.IX._T.N.` (COICOP 2018価格指数、1960年代までの歴史系列も掲載)。https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&vw=tb 。1972–1981年の掲載値を手転記。 |
+| `japan_cpi_index_2015_100` | 日本、年平均の全国CPI（総合）、2015年=100の指数 | OECD Data Explorer, `JPN.A.N.CPI.IX._T.N.` (COICOP 2018価格指数、1960年代までの歴史系列も掲載)。https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.TPS&df%5Bds%5D=dsDisseminateFinalDMZ&df%5Bid%5D=DSD_PRICES_COICOP2018%40DF_PRICES_C2018_ALL&df%5Bvs%5D=1.0&dq=JPN.A.N.CPI.IX._T.N.&pd=1955%2C2024&pg=0&snb=31&tm=consumer+price+index&to%5BTIME_PERIOD%5D=false&vw=tb 。1972–1981年の掲載値を手転記。 |
 | `japan_manufacturing_ulc_yoy_pct` | 日本の**製造業**の単位労働コスト、前年比％ | 英国議会議事録1981-01-26のOECD Main Economic Indicators引用表の日本A欄を手転記。https://hansard.parliament.uk/Commons/1981-01-26/debates/7c775e34-5df8-4e81-95dc-0b819e64ca9f/UnitLabourCosts 。1976年は「—」、1980年は**Q1の前年比**しか掲載されないので、両年の年次欄を欠測にした。 |
 | `japan_manufacturing_output_price_yoy_pct` | 日本の製造業産出価格（卸売価格）、前年比％ | 同議事録表の日本B欄（表脚注ではIMF estimates）。CPIとは異なる。 |
 | `world_oil_supply_thousand_bpd` | **世界の石油供給量**、千バレル/日、年平均 | US EIA *International Petroleum Statistics Report*, Apr 1998, Table 4.4, 1970–1997. 米国DOE/EIA公刊資料をUNT Digital Libraryで公開したテキスト表から手転記。https://digital.library.unt.edu/ark:/67531/metadc706106/m1/52/ocr/ 。全石油供給の概念で、原油の供給途絶のみを測る指標ではない。 |
 | `us_landed_opec_cost_usd_per_bbl` | **米国に到着したOPEC加盟国産の原油**の陸揚げ費用、名目ドル/バレル、月次 | US EIA, *U.S. Landed Costs of OPEC Countries Crude Oil*, 1978年1月～1980年12月を手転記。https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=m&n=pet&s=i060000008 。**日本の円建て輸入物価でも世界原油スポット価格でもない**。暦年平均は月次12値の単純平均であり、数量加重年平均とは限らない。 |
+
+### OECD Data Explorerの直接リンクについて
+
+2026-10-27、旧リンクから「The space is invalid.」と表示された報告を受け、`df[ds]=dsDisseminateFinalDMZ` と `df[vs]=1.0` 等を含む、OECDの該当系列ページで確認できるURLに更新した。OECDは2026年9〜10月のプラットフォーム障害・アクセス制限を公表しており、端末によっては引き続き表示できない可能性がある。代替として本フォルダの `historical-japan-1972-1981.csv` で転記済みの値を確認できるが、CSVはOECD原資料そのものではなく固定スナップショットである。OECDの時点を異にするデータと同一視しない。
 
 ## OECD製造業ULCのより長い系列と資料年代の頑健性
 
