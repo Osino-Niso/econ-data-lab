@@ -3,7 +3,7 @@ title: "賃金と物価が一緒に上がれば、スパイラルの証拠？ �
 emoji: "🔍"
 type: "tech"
 topics: ["economics", "macroeconomics", "econometrics", "causality"]
-published: false
+published: true
 ---
 
 [前回の記事「原油高が起きても、なぜ賃金・物価スパイラルになるとは限らない？」](https://zenn.dev/econ_data_lab/articles/oil-shocks-inflation-regimes)では、1970年代から2020年代までの日本の経験を比較しました。原油高を迎えたときの賃金交渉、企業の価格設定、物価予想などが異なれば、その後のインフレの姿も異なりうる、という話です。
@@ -180,10 +180,8 @@ $$
 
 再現用の全コードはGitHubに用意しました。
 
-- [Pythonコード](https://github.com/Osino-Niso/econ-data-lab/blob/5752802744f0fde5982673a950d58d568957a8ce/code/wage-price-observational-equivalence/python.py)
-- [Rコード](https://github.com/Osino-Niso/econ-data-lab/blob/5752802744f0fde5982673a950d58d568957a8ce/code/wage-price-observational-equivalence/r.R)
-
-<!-- 公開用PR作成時に、上の2リンクを main ブランチの同一パスへ差し替えてリンク先を再確認する。Draftブランチ削除に依存しないよう、制作中はコミット固定リンクを使う。 -->
+- [Pythonコード](https://github.com/Osino-Niso/econ-data-lab/blob/main/code/wage-price-observational-equivalence/python.py)
+- [Rコード](https://github.com/Osino-Niso/econ-data-lab/blob/main/code/wage-price-observational-equivalence/r.R)
 
 実験では次の3点を検証します。
 
